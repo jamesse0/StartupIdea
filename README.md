@@ -12,7 +12,7 @@ CougarGrub is meant to be a web application that is optimized for mobile usage t
 
 ### Elevator pitch
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Food is a basic necessity for human life, and as a college student, it can be quite scarce. Fortunately, BYU's campus can be a treasure trove of free food opportunities. Unfortunately, any student's ability to take advantage of these opportunities is limited to mere chance. CougarGrub enables students not only to captilize on these opportunities, but share with others. Ultimately we don't just want full stomachs, but united communities.
 
 ### Design
 
