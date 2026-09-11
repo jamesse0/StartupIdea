@@ -1,4 +1,4 @@
-# Your startup name here
+# CougarGrub
 
 [My Notes](notes.md)
 
