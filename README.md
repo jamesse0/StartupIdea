@@ -18,7 +18,7 @@ Food is a basic necessity for human life, and as a college student, it can be qu
 
 ![Design image](placeholder.png)
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
 
 ```mermaid
 sequenceDiagram
@@ -29,9 +29,9 @@ sequenceDiagram
 
 ### Key features
 
-- Describe your key feature
-- Describe your key feature
-- Describe your key feature
+- secure log in features
+- location and image tagging for new free food events
+- live updates for new food events
 
 ### Technologies
 
