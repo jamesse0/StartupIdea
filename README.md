@@ -29,7 +29,7 @@ sequenceDiagram
 
 ### Key features
 
-- secure log in features
+- secure login features
 - location and image tagging for new free food events
 - live updates for new food events
 
