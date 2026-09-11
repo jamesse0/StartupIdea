@@ -22,9 +22,12 @@ Food is a basic necessity for human life, and as a college student, it can be qu
 
 ```mermaid
 sequenceDiagram
-    actor You
+    actor Poster
     actor Website
-    You->>Website: Replace this with your design
+    actor Other Students
+    Poster->>Website: Post free food event (location, type, image)
+    Website->>Other Students: Notify of new food event
+    Other Students->>Website: View event details
 ```
 
 ### Key features
