@@ -37,12 +37,12 @@ sequenceDiagram
 
 I am going to use the required technologies in the following ways.
 
-- **HTML** - Description here
-- **CSS** - Description here
-- **React** - Description here
-- **Service** - Description here
-- **DB/Login** - Description here
-- **WebSocket** - Description here
+- **HTML** - Provides the structural pages of the site: the feed of active food postings, a form for submitting a new food event (location, food type, image), and user profile/login pages.
+- **CSS** - Styles the mobile-first layout so the feed of food postings, event cards, and forms look clean and usable on a phone screen 
+- **React** - Builds the interactive front end as components with routing between pages like Home, Post Event, and Profile, and reactive state so the feed updates without a full page reload.
+- **Service** -  A backend exposes endpoints for creating/fetching food postings, handling login/registration, and calling a third-party API (Google Maps API: https://mapsplatform.google.com/lp/maps-apis/)
+- **DB/Login** - stores user accounts and food event data, and supports authenticated endpoints so only logged-in students can post and view
+- **WebSocket** - makes live updates possible so a page refresh isn't required every time a new posting is submitted
 
 ## 🚀 Specification Deliverable
 
