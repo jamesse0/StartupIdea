@@ -62,9 +62,9 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Rented EC2 server** - I did not complete this part of the deliverable.
-- [ ] **Leased domain name** - I did not complete this part of the deliverable.
-- [ ] **Server accessible** from my domain: [https://yourdomainnamehere.click](https://yourdomainnamehere.click) - I did not complete this part of the deliverable.
+- [x] **Rented EC2 server** - I set up an AWS account and was able to follow the instructions to set up an EC2 instance.
+- [x] **Leased domain name** - Using route 53 I was able to register a domain name using a .click
+- [x] **Server accessible** from my domain: [https://cougargrub.click](https://cougargrub.click) - By adding some records to the DNS dashboard on AWS and editing the caddy file I was able to have my domain name route to my server.
 
 ## 🚀 HTML deliverable
 
