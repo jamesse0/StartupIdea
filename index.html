@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CougarGrub - Login</title>
+</head>
+<body>
+    <header>
+        <img src="placeholder.png" alt="CougarGrub logo">
+        <h1>CougarGrub</h1>
+        <p>Free food, shared by Cougars, for Cougars.</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html">Login</a></li>
+            <li><a href="home.html">Home</a></li>
+            <li><a href="currentListings.html">Current Listings</a></li>
+            <li><a href="postEvent.html">Post an Event</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section>
+            <h2>Welcome to CougarGrub</h2>
+            <p>
+                Food is a basic necessity for human life, and as a college student, it can be
+                quite scarce. Fortunately, BYU's campus can be a treasure trove of free food
+                opportunities. CougarGrub enables students not only to capitalize on these
+                opportunities, but share with others.
+            </p>
+            <p>Login or create an account below to start posting and viewing free food events.</p>
+        </section>
+
+        <section>
+            <h2>Login</h2>
+            <form action="#" method="post">
+                <label for="login-username">Username</label>
+                <input type="text" id="login-username" name="username" placeholder="Enter your username" required>
+
+                <label for="login-password">Password</label>
+                <input type="password" id="login-password" name="password" placeholder="Enter your password" required>
+
+                <button type="submit">Login</button>
+            </form>
+            <!-- Application data placeholder: once authenticated, the logged-in user's name will render here -->
+            <p>Currently logged in as: <span id="current-username">[username placeholder]</span></p>
+        </section>
+
+        <section>
+            <h2>Create an Account</h2>
+            <form action="#" method="post">
+                <label for="register-username">Username</label>
+                <input type="text" id="register-username" name="username" placeholder="Choose a username" required>
+
+                <label for="register-email">Email</label>
+                <input type="email" id="register-email" name="email" placeholder="you@byu.edu" required>
+
+                <label for="register-password">Password</label>
+                <input type="password" id="register-password" name="password" placeholder="Choose a password" required>
+
+                <button type="submit">Create Account</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 CougarGrub. A BYU CS 260 startup project.</p>
+        <p><a href="https://github.com/">View on GitHub</a></p>
+    </footer>
+</body>
+</html>
