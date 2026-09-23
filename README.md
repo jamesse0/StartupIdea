@@ -77,7 +77,7 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 - [x] **Text** - Each page has headings and descriptive paragraph text explaining the app and guiding the user (e.g. the elevator pitch on index.html, instructions on postEvent.html).
 - [x] **3rd party API placeholder** - Added Google Maps placeholder divs on currentListings.html (per-event map) and postEvent.html (location picker) for the Maps API I'll integrate later.
 - [x] **Images** - Used real photos (BYU Cougars logo, campus, Wilkinson Center, and food photos) pulled from Wikimedia Commons instead of placeholder graphics.
-- [ ] **Login placeholder** - I did not complete this part of the deliverable.
+- [x] **Login placeholder** - index.html has login and registration forms, plus a "currently logged in as" placeholder for the authenticated username
 - [ ] **DB data placeholder** - I did not complete this part of the deliverable.
 - [ ] **WebSocket placeholder** - I did not complete this part of the deliverable.
 
