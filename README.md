@@ -78,8 +78,8 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 - [x] **3rd party API placeholder** - Added Google Maps placeholder divs on currentListings.html (per-event map) and postEvent.html (location picker) for the Maps API I'll integrate later.
 - [x] **Images** - Used real photos (BYU Cougars logo, campus, Wilkinson Center, and food photos) pulled from Wikimedia Commons instead of placeholder graphics.
 - [x] **Login placeholder** - index.html has login and registration forms, plus a "currently logged in as" placeholder for the authenticated username
-- [ ] **DB data placeholder** - I did not complete this part of the deliverable.
-- [ ] **WebSocket placeholder** - I did not complete this part of the deliverable.
+- [x] **DB data placeholder** -  currentListings.html renders a list of food event records (title, image, poster, location, timestamp) representing data that will come from the database
+- [x] **WebSocket placeholder** - currentListings.html has a "Live Activity" feed showing real-time placeholders for events being created/ended by other users.
 
 ## 🚀 CSS deliverable
 
