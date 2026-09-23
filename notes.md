@@ -22,6 +22,7 @@ Interesting things I have learned about AWS:
 Interesting things I have learned about HTML
 - A lot of websites I grew up seeing probably were mostly html because they never had any styling
 - Be careful when deploying
+- providing detailed instructions to an llm can speed up the development process
 
 ## React
 
