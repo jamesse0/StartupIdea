@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CougarGrub - Current Listings</title>
+</head>
+<body>
+    <header>
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/BYU_Cougars_logo.svg?width=200" alt="BYU Cougars logo">
+        <h1>CougarGrub</h1>
+        <p>Free food, shared by Cougars, for Cougars.</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html">Login</a></li>
+            <li><a href="home.html">Home</a></li>
+            <li><a href="currentListings.html">Current Listings</a></li>
+            <li><a href="postEvent.html">Post an Event</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section>
+            <h2>Current Listings</h2>
+            <p>Free food events currently posted by other students. Grab it before it's gone!</p>
+        </section>
+
+        <!-- Database data placeholder: each article below represents one food event record pulled from the database -->
+        <section>
+            <article>
+                <h3>Free Pizza - Wilkinson Center</h3>
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Pizza_pie.jpg?width=400" alt="Pizza">
+                <p>Posted by: <span class="poster-username">[username placeholder]</span></p>
+                <p>Location: Wilkinson Student Center, Room 2260</p>
+                <p>Posted: <span class="post-time">[timestamp placeholder]</span></p>
+                <!-- 3rd party API placeholder: Google Maps will render an interactive map here using the event's location -->
+                <div class="map-placeholder">
+                    <p>[Google Maps embed placeholder - Wilkinson Student Center]</p>
+                </div>
+            </article>
+
+            <article>
+                <h3>Leftover Donuts - Testing Center</h3>
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Free_Colorful_Donuts_(12097493966).jpg?width=400" alt="Assorted donuts">
+                <p>Posted by: <span class="poster-username">[username placeholder]</span></p>
+                <p>Location: Testing Center Lobby</p>
+                <p>Posted: <span class="post-time">[timestamp placeholder]</span></p>
+                <div class="map-placeholder">
+                    <p>[Google Maps embed placeholder - Testing Center]</p>
+                </div>
+            </article>
+
+            <article>
+                <h3>Fresh Cookies - Harold B. Lee Library</h3>
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chocolate_Chip_Cookies_-_kimberlykv.jpg?width=400" alt="Chocolate chip cookies">
+                <p>Posted by: <span class="poster-username">[username placeholder]</span></p>
+                <p>Location: HBLL 1st Floor Study Area</p>
+                <p>Posted: <span class="post-time">[timestamp placeholder]</span></p>
+                <div class="map-placeholder">
+                    <p>[Google Maps embed placeholder - HBLL]</p>
+                </div>
+            </article>
+        </section>
+
+        <section>
+            <h2>Live Activity</h2>
+            <!-- WebSocket data placeholder: updates in real time whenever another user creates or ends a food event -->
+            <ul id="live-activity-feed">
+                <li>[websocket placeholder] A new event was just posted near the JSB.</li>
+                <li>[websocket placeholder] The "Free Pizza - Wilkinson Center" event just ended.</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 CougarGrub. A BYU CS 260 startup project.</p>
+        <p><a href="https://github.com/">View on GitHub</a></p>
+    </footer>
+</body>
+</html>
