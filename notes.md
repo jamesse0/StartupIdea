@@ -13,11 +13,15 @@ This file represents what I have learned about web programming.
 
 ## AWS
 
-Interesting things I have learned about AWS
+Interesting things I have learned about AWS:
+- AWS has a lot of different available servies
+- AWS is not as expensive as expected
 
 ## HTML
 
 Interesting things I have learned about HTML
+- A lot of websites I grew up seeing probably were mostly html because they never had any styling
+- Be careful when deploying
 
 ## React
 
