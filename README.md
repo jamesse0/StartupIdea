@@ -74,7 +74,7 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 - [x] **HTML pages** - Created four rough-draft pages (index.html, home.html, currentListings.html, postEvent.html) covering login, dashboard, browsing events, and posting a new event.
 - [x] **Proper HTML element usage** - Each page uses semantic elements including header, nav, main, section, article, and footer to structure the content.
 - [x] **Links** - Every page has a shared nav bar linking to all four pages, plus in-page links like "See all current listings."
-- [ ] **Text** - I did not complete this part of the deliverable.
+- [x] **Text** - Each page has headings and descriptive paragraph text explaining the app and guiding the user (e.g. the elevator pitch on index.html, instructions on postEvent.html).
 - [ ] **3rd party API placeholder** - I did not complete this part of the deliverable.
 - [ ] **Images** - I did not complete this part of the deliverable.
 - [ ] **Login placeholder** - I did not complete this part of the deliverable.
