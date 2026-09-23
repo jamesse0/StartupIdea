@@ -72,7 +72,7 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 - [x] I completed the prerequisites for this deliverable (Simon deployed, GitHub link, Git commits) - Got simon deployed using the built in deploy file, transferred the simon folder into this project directory but put it in the gitignore so it doesn't go to the repo.
 - [x] **HTML pages** - Created four rough-draft pages (index.html, home.html, currentListings.html, postEvent.html) covering login, dashboard, browsing events, and posting a new event.
-- [ ] **Proper HTML element usage** - I did not complete this part of the deliverable.
+- [x] **Proper HTML element usage** - Each page uses semantic elements including header, nav, main, section, article, and footer to structure the content.
 - [ ] **Links** - I did not complete this part of the deliverable.
 - [ ] **Text** - I did not complete this part of the deliverable.
 - [ ] **3rd party API placeholder** - I did not complete this part of the deliverable.
