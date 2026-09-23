@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CougarGrub - Post an Event</title>
+</head>
+<body>
+    <header>
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/BYU_Cougars_logo.svg?width=200" alt="BYU Cougars logo">
+        <h1>CougarGrub</h1>
+        <p>Free food, shared by Cougars, for Cougars.</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html">Login</a></li>
+            <li><a href="home.html">Home</a></li>
+            <li><a href="currentListings.html">Current Listings</a></li>
+            <li><a href="postEvent.html">Post an Event</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section>
+            <h2>Post a Free Food Event</h2>
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/BYU_Wilkinson_Student_Center.JPG?width=600" alt="BYU Wilkinson Student Center">
+            <p>Spotted free food on campus? Let other Cougars know so nothing goes to waste.</p>
+        </section>
+
+        <section>
+            <form action="#" method="post">
+                <label for="event-title">Event Title</label>
+                <input type="text" id="event-title" name="title" placeholder="e.g. Leftover pizza from club meeting" required>
+
+                <label for="food-type">Food Type</label>
+                <input type="text" id="food-type" name="foodType" placeholder="e.g. Pizza, donuts, sandwiches" required>
+
+                <label for="location">Location</label>
+                <input type="text" id="location" name="location" placeholder="e.g. Wilkinson Center, Room 2260" required>
+
+                <!-- 3rd party API placeholder: Google Maps will let the user drop a pin for the exact event location -->
+                <div class="map-placeholder">
+                    <p>[Google Maps location picker placeholder]</p>
+                </div>
+
+                <label for="event-image">Upload an Image</label>
+                <input type="file" id="event-image" name="image" accept="image/*">
+
+                <label for="description">Description</label>
+                <textarea id="description" name="description" placeholder="Any extra details? How much food is left, how long it'll be there, etc."></textarea>
+
+                <button type="submit">Post Event</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 CougarGrub. A BYU CS 260 startup project.</p>
+        <p><a href="https://github.com/">View on GitHub</a></p>
+    </footer>
+</body>
+</html>
