@@ -12,8 +12,8 @@
 </head>
 <body>
     <header class="site-header">
-        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Brigham_Young_University_Campus_-_BYU_-_Provo_-_Utah_in_Autumn.jpg?width=800" alt="BYU campus in Provo, Utah">
-        <div class="header-text">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/BYU_Cougars_logo.svg/330px-BYU_Cougars_logo.svg.png" alt="BYU Cougars logo">
+        <div>
             <h1>CougarGrub</h1>
             <p class="tagline">Free food, shared by Cougars, for Cougars.</p>
         </div>
@@ -37,10 +37,33 @@
 
         <section id="tip" class="card-panel">
             <h2>Food Tip of the Day</h2>
-            <!-- Application data placeholder: a randomly selected tip/quote will be rendered here -->
-            <blockquote id="daily-tip">
-                "The early Cougar gets the free pizza." - [random tip placeholder]
-            </blockquote>
+            <div id="tip-carousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#tip-carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Food tip"></button>
+                    <button type="button" data-bs-target="#tip-carousel" data-bs-slide-to="1" aria-label="Campus photo"></button>
+                </div>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="tip-slide">
+                            <!-- Application data placeholder: a randomly selected tip/quote will be rendered here -->
+                            <blockquote id="daily-tip">
+                                "The early Cougar gets the free pizza." - [random tip placeholder]
+                            </blockquote>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Brigham_Young_University_Campus_-_BYU_-_Provo_-_Utah_in_Autumn.jpg?width=800" alt="BYU campus in Provo, Utah">
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#tip-carousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#tip-carousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
         </section>
 
         <section id="quick-actions" class="card-panel">
@@ -78,5 +101,7 @@
         <p>&copy; 2026 CougarGrub. A BYU CS 260 startup project.</p>
         <p><a href="https://github.com/">View on GitHub</a></p>
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
