@@ -45,9 +45,9 @@ img {
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-wrap: wrap;
     gap: 1rem;
-    padding: 1.5rem 1rem;
+    min-height: 140px;
+    padding: 1rem;
     background-color: var(--navy);
     color: var(--grey);
     text-align: center;
@@ -55,6 +55,7 @@ img {
 
 .site-header img {
     width: 80px;
+    flex-shrink: 0;
 }
 
 .site-header h1 {
@@ -67,6 +68,16 @@ img {
 .tagline {
     margin: 0;
     font-style: italic;
+}
+
+@media (max-width: 575px) {
+    .site-header img {
+        width: 56px;
+    }
+
+    .site-header h1 {
+        font-size: 2rem;
+    }
 }
 
 /* ---------- Navigation ---------- */
