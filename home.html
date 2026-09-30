@@ -4,31 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CougarGrub - Home</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="home.css" rel="stylesheet">
 </head>
 <body>
-    <header>
+    <header class="site-header">
         <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Brigham_Young_University_Campus_-_BYU_-_Provo_-_Utah_in_Autumn.jpg?width=800" alt="BYU campus in Provo, Utah">
-        <h1>CougarGrub</h1>
-        <p>Free food, shared by Cougars, for Cougars.</p>
+        <div class="header-text">
+            <h1>CougarGrub</h1>
+            <p class="tagline">Free food, shared by Cougars, for Cougars.</p>
+        </div>
     </header>
 
-    <nav>
-        <ul>
-            <li><a href="index.html">Login</a></li>
-            <li><a href="home.html">Home</a></li>
-            <li><a href="currentListings.html">Current Listings</a></li>
-            <li><a href="postEvent.html">Post an Event</a></li>
+    <nav class="site-nav">
+        <ul class="nav justify-content-center">
+            <li class="nav-item"><a class="nav-link" href="index.html">Login</a></li>
+            <li class="nav-item"><a class="nav-link active" aria-current="page" href="home.html">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="currentListings.html">Current Listings</a></li>
+            <li class="nav-item"><a class="nav-link" href="postEvent.html">Post an Event</a></li>
         </ul>
     </nav>
 
-    <main>
-        <section>
+    <main class="container">
+        <section id="greeting">
             <!-- Application data placeholder: rendered from app state once a user is logged in -->
             <h2>Welcome back, <span id="current-username">[username placeholder]</span>!</h2>
             <p>Here's what's happening around campus today.</p>
         </section>
 
-        <section>
+        <section id="tip" class="card-panel">
             <h2>Food Tip of the Day</h2>
             <!-- Application data placeholder: a randomly selected tip/quote will be rendered here -->
             <blockquote id="daily-tip">
@@ -36,38 +43,38 @@
             </blockquote>
         </section>
 
-        <section>
+        <section id="quick-actions" class="card-panel">
             <h2>Quick Actions</h2>
-            <div>
-                <a href="currentListings.html" title="View Current Listings">
-                    <svg width="48" height="48" viewBox="0 0 24 24" aria-hidden="true">
-                        <circle cx="12" cy="12" r="10" fill="none" stroke="black" stroke-width="2"></circle>
-                        <path d="M8 12h8M12 8v8" stroke="black" stroke-width="2"></path>
+            <div class="action-list">
+                <a href="currentListings.html" class="quick-action" title="View Current Listings">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M8 12h8M12 8v8"></path>
                     </svg>
                     <span>View Listings</span>
                 </a>
-                <a href="postEvent.html" title="Post a New Event">
-                    <svg width="48" height="48" viewBox="0 0 24 24" aria-hidden="true">
-                        <rect x="3" y="3" width="18" height="18" fill="none" stroke="black" stroke-width="2"></rect>
-                        <path d="M8 12h8M12 8v8" stroke="black" stroke-width="2"></path>
+                <a href="postEvent.html" class="quick-action" title="Post a New Event">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <rect x="3" y="3" width="18" height="18"></rect>
+                        <path d="M8 12h8M12 8v8"></path>
                     </svg>
                     <span>Post an Event</span>
                 </a>
             </div>
         </section>
 
-        <section>
+        <section id="recent-activity" class="card-panel">
             <h2>Recent Activity</h2>
             <!-- Database data placeholder: teaser of the most recent food events, full list on currentListings.html -->
             <ul id="recent-activity-preview">
                 <li>[Event placeholder] - Free pizza at the Wilkinson Center</li>
                 <li>[Event placeholder] - Leftover cookies at the Testing Center</li>
             </ul>
-            <p><a href="currentListings.html">See all current listings</a></p>
+            <p class="see-all"><a href="currentListings.html">See all current listings</a></p>
         </section>
     </main>
 
-    <footer>
+    <footer class="site-footer">
         <p>&copy; 2026 CougarGrub. A BYU CS 260 startup project.</p>
         <p><a href="https://github.com/">View on GitHub</a></p>
     </footer>

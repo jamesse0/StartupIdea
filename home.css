@@ -1,0 +1,271 @@
+/* ---------- Color palette ---------- */
+:root {
+    --navy: #001D3D;
+    --royal: #003566;
+    --grey: #E8E0DE;
+    --yellow: #FFC300;
+}
+
+/* ---------- Element selectors ---------- */
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    overflow-x: hidden;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--grey);
+    color: var(--navy);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+h1,
+h2 {
+    font-weight: 700;
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* ---------- Header (campus photo banner) ---------- */
+.site-header {
+    display: grid;
+    background-color: var(--navy);
+    color: var(--grey);
+    text-align: center;
+}
+
+/* Photo and text share the same grid cell so the text sits on top of the photo */
+.site-header img,
+.header-text {
+    grid-area: 1 / 1;
+}
+
+.site-header img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    opacity: 0.45;
+}
+
+.header-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+.site-header h1 {
+    margin: 0;
+    font-size: 3rem;
+    color: var(--yellow);
+    letter-spacing: 1px;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+.tagline {
+    margin: 0;
+    font-style: italic;
+    font-weight: 500;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+/* ---------- Navigation ---------- */
+.site-nav {
+    background-color: var(--royal);
+    padding: 0.5rem 1rem;
+}
+
+.site-nav .nav-link {
+    color: var(--grey);
+    font-weight: 500;
+    border-radius: 999px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.site-nav .nav-link:hover,
+.site-nav .nav-link:focus {
+    background-color: var(--navy);
+    color: var(--yellow);
+}
+
+.site-nav .nav-link.active {
+    background-color: var(--yellow);
+    color: var(--navy);
+}
+
+/* ---------- Main layout (grid) ---------- */
+main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+    main {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    #greeting,
+    #recent-activity {
+        grid-column: 1 / -1;
+    }
+}
+
+/* ---------- ID selectors ---------- */
+#greeting {
+    background-color: var(--navy);
+    color: var(--grey);
+    padding: 2rem;
+    border-radius: 1rem;
+    border-left: 8px solid var(--yellow);
+}
+
+#greeting p {
+    margin-bottom: 0;
+}
+
+#current-username {
+    color: var(--yellow);
+}
+
+#daily-tip {
+    margin: 0;
+    padding: 1rem 1.25rem;
+    border-left: 5px solid var(--yellow);
+    background-color: var(--grey);
+    border-radius: 0 0.5rem 0.5rem 0;
+    font-size: 1.1rem;
+    font-style: italic;
+}
+
+#recent-activity-preview {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#recent-activity-preview li {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--grey);
+}
+
+#recent-activity-preview li:last-child {
+    border-bottom: none;
+}
+
+#recent-activity-preview li::before {
+    content: "\2022";
+    color: var(--yellow);
+    font-weight: 700;
+    margin-right: 0.6rem;
+}
+
+/* ---------- Cards ---------- */
+.card-panel {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 1rem;
+    border-top: 6px solid var(--royal);
+    box-shadow: 0 4px 12px rgba(0, 29, 61, 0.15);
+    min-width: 0;
+}
+
+/* ---------- Quick actions (flexbox) ---------- */
+.action-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.quick-action {
+    flex: 1 1 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1.25rem 1rem;
+    background-color: var(--royal);
+    color: var(--grey);
+    border-radius: 0.75rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s, color 0.2s, transform 0.2s;
+}
+
+.quick-action svg {
+    width: 48px;
+    height: 48px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+}
+
+.quick-action:hover,
+.quick-action:focus {
+    background-color: var(--yellow);
+    color: var(--navy);
+    transform: translateY(-3px);
+}
+
+/* ---------- Links ---------- */
+.see-all {
+    margin: 1rem 0 0;
+    text-align: right;
+}
+
+.see-all a {
+    color: var(--royal);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.see-all a:hover {
+    color: var(--navy);
+    text-decoration: underline;
+    text-decoration-color: var(--yellow);
+    text-decoration-thickness: 3px;
+}
+
+/* ---------- Footer ---------- */
+.site-footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    background-color: var(--navy);
+    color: var(--grey);
+    font-size: 0.9rem;
+}
+
+.site-footer p {
+    margin: 0;
+}
+
+.site-footer a {
+    color: var(--yellow);
+    text-decoration: none;
+}
+
+.site-footer a:hover {
+    text-decoration: underline;
+}
