@@ -88,7 +88,7 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 - [x] I completed the prerequisites for this deliverable (Simon deployed, GitHub link, Git commits)
 - [x] **Visually appealing colors and layout. No overflowing elements.** - All four pages share a navy, blue, yellow and light-grey palette, with a consistent header, pill nav bar, card sections and footer. Images use max-width/object-fit, and horizontal overflow is prevented so nothing spills off the page at any width.
 - [x] **Use of a CSS framework** - I used Bootstrap 5.3 from a CDN for the nav, form controls and buttons, and a Bootstrap carousel on the home page rotates the food tip and a campus photo.
-- [ ] **All visual elements styled using CSS** - I did not complete this part of the deliverable.
+- [x] **All visual elements styled using CSS** - Every page has its own stylesheet covering colors, spacing, borders, shadows and hover effects. The quick-action SVG icons also get their stroke and fill from CSS instead of HTML attributes
 - [ ] **Responsive to window resizing using flexbox and/or grid display** - I did not complete this part of the deliverable.
 - [ ] **Use of a imported font** - I did not complete this part of the deliverable.
 - [ ] **Use of different types of selectors including element, class, ID, and pseudo selectors** - I did not complete this part of the deliverable.
