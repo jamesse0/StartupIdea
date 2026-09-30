@@ -1,0 +1,215 @@
+/* ---------- Color palette ---------- */
+:root {
+    --navy: #3D366D;
+    --royal: #712ADF;
+    --grey: #E8E0DE;
+    --yellow: #E0D472;
+}
+
+/* ---------- Element selectors ---------- */
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    overflow-x: hidden;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--grey);
+    color: var(--navy);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+h1,
+h2 {
+    font-weight: 700;
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* ---------- Header ---------- */
+.site-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1.5rem 1rem;
+    background-color: var(--navy);
+    color: var(--grey);
+    text-align: center;
+}
+
+.site-header img {
+    width: 80px;
+}
+
+.site-header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    color: var(--yellow);
+    letter-spacing: 1px;
+}
+
+.tagline {
+    margin: 0;
+    font-style: italic;
+}
+
+/* ---------- Navigation ---------- */
+.site-nav {
+    background-color: var(--royal);
+    padding: 0.5rem 1rem;
+}
+
+.site-nav .nav-link {
+    color: var(--grey);
+    font-weight: 500;
+    border-radius: 999px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.site-nav .nav-link:hover,
+.site-nav .nav-link:focus {
+    background-color: var(--navy);
+    color: var(--yellow);
+}
+
+.site-nav .nav-link.active {
+    background-color: var(--yellow);
+    color: var(--navy);
+}
+
+/* ---------- Main layout (grid) ---------- */
+main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+    main {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    #welcome {
+        grid-column: 1 / -1;
+    }
+}
+
+/* ---------- ID selectors ---------- */
+#welcome {
+    background-color: var(--navy);
+    color: var(--grey);
+    padding: 2rem;
+    border-radius: 1rem;
+    border-left: 8px solid var(--yellow);
+}
+
+#welcome h2 {
+    color: var(--yellow);
+}
+
+#welcome p:last-child {
+    margin-bottom: 0;
+    font-weight: 600;
+}
+
+#current-username {
+    font-weight: 600;
+    color: var(--royal);
+}
+
+/* ---------- Form cards ---------- */
+.card-panel {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 1rem;
+    border-top: 6px solid var(--royal);
+    box-shadow: 0 4px 12px rgba(61, 54, 109, 0.15);
+    min-width: 0;
+}
+
+.card-panel form {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-panel .form-label {
+    font-weight: 500;
+    margin-top: 0.75rem;
+}
+
+.card-panel .form-control:focus {
+    border-color: var(--royal);
+    box-shadow: 0 0 0 0.2rem rgba(113, 42, 223, 0.25);
+}
+
+.card-panel .form-control::placeholder {
+    color: #9a93b8;
+}
+
+.login-status {
+    margin-top: 1.25rem;
+    margin-bottom: 0;
+    font-size: 0.9rem;
+}
+
+/* ---------- Buttons ---------- */
+.btn-cougar {
+    margin-top: 1.5rem;
+    background-color: var(--royal);
+    color: #ffffff;
+    font-weight: 600;
+    border: none;
+    padding: 0.6rem;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-cougar:hover,
+.btn-cougar:focus {
+    background-color: var(--yellow);
+    color: var(--navy);
+}
+
+/* ---------- Footer ---------- */
+.site-footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    background-color: var(--navy);
+    color: var(--grey);
+    font-size: 0.9rem;
+}
+
+.site-footer p {
+    margin: 0;
+}
+
+.site-footer a {
+    color: var(--yellow);
+    text-decoration: none;
+}
+
+.site-footer a:hover {
+    text-decoration: underline;
+}
