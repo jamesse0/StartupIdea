@@ -90,7 +90,7 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 - [x] **Use of a CSS framework** - I used Bootstrap 5.3 from a CDN for the nav, form controls and buttons, and a Bootstrap carousel on the home page rotates the food tip and a campus photo.
 - [x] **All visual elements styled using CSS** - Every page has its own stylesheet covering colors, spacing, borders, shadows and hover effects. The quick-action SVG icons also get their stroke and fill from CSS instead of HTML attributes
 - [x] **Responsive to window resizing using flexbox and/or grid display** - Grid handles the page layouts, like the side-by-side login forms, the auto-fitting listing cards and the two-column post page, and collapses them to one column on small screens. Flexbox handles the header, footer, forms and quick-action tiles.
-- [ ] **Use of a imported font** - I did not complete this part of the deliverable.
+- [x] **Use of a imported font** - I imported Poppins from Google Fonts and used it across the whole site
 - [ ] **Use of different types of selectors including element, class, ID, and pseudo selectors** - I did not complete this part of the deliverable.
 
 ## 🚀 React part 1: Routing deliverable
