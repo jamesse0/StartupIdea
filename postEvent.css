@@ -1,0 +1,282 @@
+/* ---------- Color palette ---------- */
+:root {
+    --navy: #001D3D;
+    --royal: #003566;
+    --grey: #E8E0DE;
+    --yellow: #FFC300;
+}
+
+/* ---------- Element selectors ---------- */
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    overflow-x: hidden;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--grey);
+    color: var(--navy);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+h1,
+h2 {
+    font-weight: 700;
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* ---------- Header ---------- */
+.site-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    min-height: 140px;
+    padding: 1rem;
+    background-color: var(--navy);
+    color: var(--grey);
+    text-align: center;
+}
+
+.site-header img {
+    width: 80px;
+    flex-shrink: 0;
+}
+
+.site-header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    color: var(--yellow);
+    letter-spacing: 1px;
+}
+
+.tagline {
+    margin: 0;
+    font-style: italic;
+}
+
+@media (max-width: 575px) {
+    .site-header img {
+        width: 56px;
+    }
+
+    .site-header h1 {
+        font-size: 2rem;
+    }
+}
+
+/* ---------- Navigation ---------- */
+.site-nav {
+    background-color: var(--royal);
+    padding: 0.5rem 1rem;
+}
+
+.site-nav .nav-link {
+    color: var(--grey);
+    font-weight: 500;
+    border-radius: 999px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.site-nav .nav-link:hover,
+.site-nav .nav-link:focus {
+    background-color: var(--navy);
+    color: var(--yellow);
+}
+
+.site-nav .nav-link.active {
+    background-color: var(--yellow);
+    color: var(--navy);
+}
+
+/* ---------- Main layout (grid) ---------- */
+main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+@media (min-width: 992px) {
+    main {
+        grid-template-columns: 2fr 3fr;
+        align-items: start;
+    }
+}
+
+/* ---------- Intro (grid areas) ---------- */
+#post-intro {
+    display: grid;
+    grid-template-areas:
+        "title"
+        "text"
+        "photo";
+    gap: 1rem;
+    background-color: var(--navy);
+    color: var(--grey);
+    padding: 2rem;
+    border-radius: 1rem;
+    border-left: 8px solid var(--yellow);
+    min-width: 0;
+}
+
+#post-intro h2 {
+    grid-area: title;
+    margin: 0;
+    color: var(--yellow);
+}
+
+#post-intro p {
+    grid-area: text;
+    margin: 0;
+}
+
+#post-intro img {
+    grid-area: photo;
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    border-radius: 0.75rem;
+    border: 3px solid var(--yellow);
+}
+
+/* on the wide two-column layout the intro sticks while you scroll the form */
+@media (min-width: 992px) {
+    #post-intro {
+        position: sticky;
+        top: 1rem;
+    }
+
+    #post-intro img {
+        height: 320px;
+    }
+}
+
+/* ---------- Form card ---------- */
+.card-panel {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 1rem;
+    border-top: 6px solid var(--royal);
+    box-shadow: 0 4px 12px rgba(0, 29, 61, 0.15);
+    min-width: 0;
+}
+
+.card-panel form {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-panel .form-label {
+    font-weight: 500;
+    margin-top: 0.75rem;
+}
+
+.card-panel .form-label:first-child {
+    margin-top: 0;
+}
+
+.card-panel .form-control:focus {
+    border-color: var(--royal);
+    box-shadow: 0 0 0 0.2rem rgba(0, 53, 102, 0.25);
+}
+
+.card-panel .form-control::placeholder {
+    color: #6E7CA0;
+}
+
+#description {
+    min-height: 140px;
+    resize: vertical;
+}
+
+/* ---------- File upload button ---------- */
+#event-image::file-selector-button {
+    background-color: var(--royal);
+    color: #ffffff;
+    font-weight: 600;
+    border: none;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+#event-image:hover::file-selector-button {
+    background-color: var(--yellow);
+    color: var(--navy);
+}
+
+/* ---------- Map placeholder ---------- */
+.map-placeholder {
+    margin-top: 1rem;
+    padding: 2.5rem 1rem;
+    background-color: var(--grey);
+    border: 2px dashed var(--royal);
+    border-radius: 0.75rem;
+    text-align: center;
+}
+
+.map-placeholder p {
+    margin: 0;
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--royal);
+}
+
+/* ---------- Buttons ---------- */
+.btn-cougar {
+    margin-top: 1.5rem;
+    background-color: var(--royal);
+    color: #ffffff;
+    font-weight: 600;
+    border: none;
+    padding: 0.6rem;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-cougar:hover,
+.btn-cougar:focus {
+    background-color: var(--yellow);
+    color: var(--navy);
+}
+
+/* ---------- Footer ---------- */
+.site-footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    background-color: var(--navy);
+    color: var(--grey);
+    font-size: 0.9rem;
+}
+
+.site-footer p {
+    margin: 0;
+}
+
+.site-footer a {
+    color: var(--yellow);
+    text-decoration: none;
+}
+
+.site-footer a:hover {
+    text-decoration: underline;
+}

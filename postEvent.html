@@ -4,58 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CougarGrub - Post an Event</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="postEvent.css" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/BYU_Cougars_logo.svg?width=200" alt="BYU Cougars logo">
-        <h1>CougarGrub</h1>
-        <p>Free food, shared by Cougars, for Cougars.</p>
+    <header class="site-header">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/BYU_Cougars_logo.svg/330px-BYU_Cougars_logo.svg.png" alt="BYU Cougars logo">
+        <div>
+            <h1>CougarGrub</h1>
+            <p class="tagline">Free food, shared by Cougars, for Cougars.</p>
+        </div>
     </header>
 
-    <nav>
-        <ul>
-            <li><a href="index.html">Login</a></li>
-            <li><a href="home.html">Home</a></li>
-            <li><a href="currentListings.html">Current Listings</a></li>
-            <li><a href="postEvent.html">Post an Event</a></li>
+    <nav class="site-nav">
+        <ul class="nav justify-content-center">
+            <li class="nav-item"><a class="nav-link" href="index.html">Login</a></li>
+            <li class="nav-item"><a class="nav-link" href="home.html">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="currentListings.html">Current Listings</a></li>
+            <li class="nav-item"><a class="nav-link active" aria-current="page" href="postEvent.html">Post an Event</a></li>
         </ul>
     </nav>
 
-    <main>
-        <section>
+    <main class="container">
+        <section id="post-intro">
             <h2>Post a Free Food Event</h2>
             <img src="https://commons.wikimedia.org/wiki/Special:FilePath/BYU_Wilkinson_Student_Center.JPG?width=600" alt="BYU Wilkinson Student Center">
             <p>Spotted free food on campus? Let other Cougars know so nothing goes to waste.</p>
         </section>
 
-        <section>
+        <section id="post-form" class="card-panel">
             <form action="#" method="post">
-                <label for="event-title">Event Title</label>
-                <input type="text" id="event-title" name="title" placeholder="e.g. Leftover pizza from club meeting" required>
+                <label for="event-title" class="form-label">Event Title</label>
+                <input type="text" id="event-title" class="form-control" name="title" placeholder="e.g. Leftover pizza from club meeting" required>
 
-                <label for="food-type">Food Type</label>
-                <input type="text" id="food-type" name="foodType" placeholder="e.g. Pizza, donuts, sandwiches" required>
+                <label for="food-type" class="form-label">Food Type</label>
+                <input type="text" id="food-type" class="form-control" name="foodType" placeholder="e.g. Pizza, donuts, sandwiches" required>
 
-                <label for="location">Location</label>
-                <input type="text" id="location" name="location" placeholder="e.g. Wilkinson Center, Room 2260" required>
+                <label for="location" class="form-label">Location</label>
+                <input type="text" id="location" class="form-control" name="location" placeholder="e.g. Wilkinson Center, Room 2260" required>
 
                 <!-- 3rd party API placeholder: Google Maps will let the user drop a pin for the exact event location -->
                 <div class="map-placeholder">
                     <p>[Google Maps location picker placeholder]</p>
                 </div>
 
-                <label for="event-image">Upload an Image</label>
-                <input type="file" id="event-image" name="image" accept="image/*">
+                <label for="event-image" class="form-label">Upload an Image</label>
+                <input type="file" id="event-image" class="form-control" name="image" accept="image/*">
 
-                <label for="description">Description</label>
-                <textarea id="description" name="description" placeholder="Any extra details? How much food is left, how long it'll be there, etc."></textarea>
+                <label for="description" class="form-label">Description</label>
+                <textarea id="description" class="form-control" name="description" placeholder="Any extra details? How much food is left, how long it'll be there, etc."></textarea>
 
-                <button type="submit">Post Event</button>
+                <button type="submit" class="btn btn-cougar">Post Event</button>
             </form>
         </section>
     </main>
 
-    <footer>
+    <footer class="site-footer">
         <p>&copy; 2026 CougarGrub. A BYU CS 260 startup project.</p>
         <p><a href="https://github.com/">View on GitHub</a></p>
     </footer>
