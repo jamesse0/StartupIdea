@@ -1,9 +1,9 @@
 /* ---------- Color palette ---------- */
 :root {
-    --navy: #002E5D;
-    --royal: #0047BA;
+    --navy: #001D3D;
+    --royal: #003566;
     --grey: #E8E0DE;
-    --yellow: #E0D472;
+    --yellow: #FFC300;
 }
 
 /* ---------- Element selectors ---------- */
@@ -142,7 +142,7 @@ main {
     padding: 2rem;
     border-radius: 1rem;
     border-top: 6px solid var(--royal);
-    box-shadow: 0 4px 12px rgba(0, 46, 93, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 29, 61, 0.15);
     min-width: 0;
 }
 
@@ -158,7 +158,7 @@ main {
 
 .card-panel .form-control:focus {
     border-color: var(--royal);
-    box-shadow: 0 0 0 0.2rem rgba(0, 71, 186, 0.25);
+    box-shadow: 0 0 0 0.2rem rgba(0, 53, 102, 0.25);
 }
 
 .card-panel .form-control::placeholder {
