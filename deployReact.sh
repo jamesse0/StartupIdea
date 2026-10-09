@@ -1,5 +1,3 @@
-#!/bin/bash
-
 while getopts k:h:s: flag
 do
     case "${flag}" in
@@ -36,7 +34,7 @@ ENDSSH
 printf "\n----> Copy the distribution package to the target\n"
 scp -r -i "$key" build/* ubuntu@$hostname:services/$service/public
 
-# Step 4
+# Step 5
 printf "\n----> Removing local copy of the distribution package\n"
 rm -rf build
 rm -rf dist
