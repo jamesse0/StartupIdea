@@ -1,0 +1,141 @@
+/* ---------- Color palette ---------- */
+:root {
+    --navy: #001D3D;
+    --royal: #003566;
+    --grey: #E8E0DE;
+    --yellow: #FFC300;
+}
+
+/* ---------- Element selectors ---------- */
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    overflow-x: hidden;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--grey);
+    color: var(--navy);
+}
+
+/* React renders everything inside <div id="root">, so the page-wide
+   flex column lives on this wrapper div instead of on <body> */
+.body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* main stretches so the footer stays at the bottom on short pages */
+main {
+    flex: 1;
+}
+
+h1,
+h2 {
+    font-weight: 700;
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* ---------- Header ---------- */
+.site-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    min-height: 140px;
+    padding: 1rem;
+    background-color: var(--navy);
+    color: var(--grey);
+    text-align: center;
+}
+
+.site-header img {
+    width: 80px;
+    flex-shrink: 0;
+}
+
+.site-header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    color: var(--yellow);
+    letter-spacing: 1px;
+}
+
+.tagline {
+    margin: 0;
+    font-style: italic;
+}
+
+@media (max-width: 575px) {
+    .site-header img {
+        width: 56px;
+    }
+
+    .site-header h1 {
+        font-size: 2rem;
+    }
+}
+
+/* ---------- Navigation ---------- */
+.site-nav {
+    background-color: var(--royal);
+    padding: 0.5rem 1rem;
+}
+
+.site-nav .nav-link {
+    color: var(--grey);
+    font-weight: 500;
+    border-radius: 999px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.site-nav .nav-link:hover,
+.site-nav .nav-link:focus {
+    background-color: var(--navy);
+    color: var(--yellow);
+}
+
+.site-nav .nav-link.active {
+    background-color: var(--yellow);
+    color: var(--navy);
+}
+
+/* ---------- Footer ---------- */
+.site-footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    background-color: var(--navy);
+    color: var(--grey);
+    font-size: 0.9rem;
+}
+
+.site-footer p {
+    margin: 0;
+}
+
+.site-footer a {
+    color: var(--yellow);
+    text-decoration: none;
+}
+
+.site-footer a:hover {
+    text-decoration: underline;
+}
