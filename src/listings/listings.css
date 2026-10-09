@@ -1,0 +1,163 @@
+/* Every rule is prefixed with .listings-page so it can't leak onto the other pages
+   (Vite loads all page stylesheets at once) */
+
+/* ---------- Main layout (grid) ---------- */
+.listings-page {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+/* ---------- ID selectors ---------- */
+.listings-page #listings-intro {
+    background-color: var(--navy);
+    color: var(--grey);
+    padding: 2rem;
+    border-radius: 1rem;
+    border-left: 8px solid var(--yellow);
+}
+
+.listings-page #listings-intro h2 {
+    color: var(--yellow);
+}
+
+.listings-page #listings-intro p {
+    margin-bottom: 0;
+}
+
+/* ---------- Listing cards (grid of flex columns) ---------- */
+.listings-page .listing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.5rem;
+}
+
+.listings-page .listing-card {
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    border-radius: 1rem;
+    border-bottom: 6px solid var(--royal);
+    box-shadow: 0 4px 12px rgba(0, 29, 61, 0.15);
+    overflow: hidden;
+    min-width: 0;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+.listings-page .listing-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 29, 61, 0.25);
+    border-bottom-color: var(--yellow);
+}
+
+/* show the photo above the title without reordering the HTML */
+.listings-page .listing-card img {
+    order: -1;
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.listings-page .listing-card h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin: 1rem 1.25rem 0.75rem;
+}
+
+.listings-page .listing-card p {
+    margin: 0 1.25rem 0.35rem;
+    font-size: 0.9rem;
+}
+
+.listings-page .poster-username,
+.listings-page .post-time {
+    font-weight: 600;
+    color: var(--royal);
+}
+
+/* ---------- Map placeholder ---------- */
+/* auto top margin pushes the map to the bottom of each card even when the cards differ in height */
+.listings-page .map-placeholder {
+    margin: auto 1.25rem 1.25rem;
+    padding: 1.5rem 1rem;
+    background-color: var(--grey);
+    border: 2px dashed var(--royal);
+    border-radius: 0.75rem;
+    text-align: center;
+}
+
+.listings-page .listing-card .map-placeholder p {
+    margin: 0;
+    font-size: 0.8rem;
+    font-style: italic;
+    color: var(--royal);
+}
+
+/* extra space between the last detail line and the map */
+.listings-page .listing-card > p:last-of-type {
+    margin-bottom: 1rem;
+}
+
+/* ---------- Live activity feed ---------- */
+.listings-page .card-panel {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 1rem;
+    border-top: 6px solid var(--royal);
+    box-shadow: 0 4px 12px rgba(0, 29, 61, 0.15);
+    min-width: 0;
+}
+
+.listings-page #live-activity h2::after {
+    content: "LIVE";
+    display: inline-block;
+    margin-left: 0.75rem;
+    padding: 0.15rem 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    vertical-align: middle;
+    background-color: var(--yellow);
+    color: var(--navy);
+    border-radius: 999px;
+}
+
+.listings-page #live-activity-feed {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.listings-page #live-activity-feed li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--grey);
+}
+
+.listings-page #live-activity-feed li:last-child {
+    border-bottom: none;
+}
+
+.listings-page #live-activity-feed li::before {
+    content: "";
+    flex-shrink: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--yellow);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 195, 0, 0.7);
+    }
+
+    100% {
+        box-shadow: 0 0 0 8px rgba(255, 195, 0, 0);
+    }
+}
