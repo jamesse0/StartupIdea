@@ -97,10 +97,10 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] I completed the prerequisites for this deliverable (Simon deployed, GitHub link, Git commits)
-- [ ] **Bundled using Vite** - I did not complete this part of the deliverable.
-- [ ] **Components** - I did not complete this part of the deliverable.
-- [ ] **Router** - I did not complete this part of the deliverable.
+- [x] I completed the prerequisites for this deliverable (Simon deployed, GitHub link, Git commits)
+- [x] **Bundled using Vite** - Vite runs the dev server and bundles the app into `dist/`. Bootstrap and React are installed through npm, and `deployReact.sh` builds the bundle before uploading it to my server.
+- [x] **Components** - Each page (Login, Home, Listings, Post Event) is its own component in `src/` with its own scoped CSS file. The shared header, nav, and footer live once in `app.jsx`, and the home page carousel uses react-bootstrap.
+- [x] **Router** - React Router maps `/`, `/home`, `/listings`, and `/post` to their components without reloading the page. The nav uses `NavLink` to highlight the current page, and unknown paths show a 404 page.
 
 ## 🚀 React part 2: Reactivity deliverable
 

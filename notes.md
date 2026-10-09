@@ -27,3 +27,7 @@ Interesting things I have learned about HTML
 ## React
 
 Interesting things I have learned about React
+- Vite bundles the `.jsx` into `dist/`, so deploying needs a build step
+- JSX is almost HTML (`className`, `htmlFor`, every tag closes)
+- React Router uses `<Link>` instead of `<a href>` to switch pages without reloading
+- Imported CSS is global, so I prefixed each page's rules to avoid clashes
