@@ -1,0 +1,198 @@
+/* Every rule is prefixed with .home-page so it can't leak onto the other pages
+   (Vite loads all page stylesheets at once) */
+
+/* ---------- Main layout (grid) ---------- */
+.home-page {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+    .home-page {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .home-page #greeting,
+    .home-page #recent-activity {
+        grid-column: 1 / -1;
+    }
+}
+
+/* ---------- ID selectors ---------- */
+.home-page #greeting {
+    background-color: var(--navy);
+    color: var(--grey);
+    padding: 2rem;
+    border-radius: 1rem;
+    border-left: 8px solid var(--yellow);
+}
+
+.home-page #greeting p {
+    margin-bottom: 0;
+}
+
+.home-page #current-username {
+    color: var(--yellow);
+}
+
+.home-page #daily-tip {
+    margin: 0;
+    padding: 0.5rem 1rem;
+    border-left: 5px solid var(--yellow);
+    font-size: 1.1rem;
+    font-style: italic;
+}
+
+/* ---------- Food tip carousel ---------- */
+.home-page #tip-carousel {
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+/* both slides share one height so the card doesn't jump while sliding */
+.home-page #tip-carousel .carousel-item {
+    height: 220px;
+}
+
+.home-page #tip-carousel .carousel-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.home-page .tip-slide {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 3rem 1.5rem;
+    background-color: var(--grey);
+}
+
+.home-page #tip-carousel .carousel-control-prev,
+.home-page #tip-carousel .carousel-control-next {
+    width: 3rem;
+    opacity: 1;
+}
+
+.home-page #tip-carousel .carousel-control-prev-icon,
+.home-page #tip-carousel .carousel-control-next-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+    background-color: var(--navy);
+    background-size: 55%;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+.home-page #tip-carousel .carousel-control-prev:hover .carousel-control-prev-icon,
+.home-page #tip-carousel .carousel-control-next:hover .carousel-control-next-icon {
+    background-color: var(--royal);
+}
+
+.home-page #tip-carousel .carousel-indicators {
+    margin-bottom: 0.5rem;
+}
+
+.home-page #tip-carousel .carousel-indicators [data-bs-target] {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid var(--navy);
+    background-color: var(--yellow);
+    opacity: 0.5;
+}
+
+.home-page #tip-carousel .carousel-indicators .active {
+    opacity: 1;
+}
+
+.home-page #recent-activity-preview {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.home-page #recent-activity-preview li {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--grey);
+}
+
+.home-page #recent-activity-preview li:last-child {
+    border-bottom: none;
+}
+
+.home-page #recent-activity-preview li::before {
+    content: "\2022";
+    color: var(--yellow);
+    font-weight: 700;
+    margin-right: 0.6rem;
+}
+
+/* ---------- Cards ---------- */
+.home-page .card-panel {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 1rem;
+    border-top: 6px solid var(--royal);
+    box-shadow: 0 4px 12px rgba(0, 29, 61, 0.15);
+    min-width: 0;
+}
+
+/* ---------- Quick actions (flexbox) ---------- */
+.home-page .action-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.home-page .quick-action {
+    flex: 1 1 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1.25rem 1rem;
+    background-color: var(--royal);
+    color: var(--grey);
+    border-radius: 0.75rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s, color 0.2s, transform 0.2s;
+}
+
+.home-page .quick-action svg {
+    width: 48px;
+    height: 48px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+}
+
+.home-page .quick-action:hover,
+.home-page .quick-action:focus {
+    background-color: var(--yellow);
+    color: var(--navy);
+    transform: translateY(-3px);
+}
+
+/* ---------- Links ---------- */
+.home-page .see-all {
+    margin: 1rem 0 0;
+    text-align: right;
+}
+
+.home-page .see-all a {
+    color: var(--royal);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.home-page .see-all a:hover {
+    color: var(--navy);
+    text-decoration: underline;
+    text-decoration-color: var(--yellow);
+    text-decoration-thickness: 3px;
+}
