@@ -10,14 +10,10 @@
     padding-bottom: 2rem;
 }
 
-@media (min-width: 768px) {
-    .login-page {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .login-page #welcome {
-        grid-column: 1 / -1;
-    }
+.login-page #login {
+    max-width: 480px;
+    width: 100%;
+    justify-self: center;
 }
 
 /* ---------- ID selectors ---------- */
@@ -79,8 +75,17 @@
 }
 
 /* ---------- Buttons ---------- */
-.login-page .btn-cougar {
+.login-page .button-row {
+    display: flex;
+    gap: 0.75rem;
     margin-top: 1.5rem;
+}
+
+.login-page .button-row .btn {
+    flex: 1;
+}
+
+.login-page .btn-cougar {
     background-color: var(--royal);
     color: #ffffff;
     font-weight: 600;
@@ -89,8 +94,20 @@
     transition: background-color 0.2s, color 0.2s;
 }
 
+.login-page .btn-cougar-outline {
+    background-color: #ffffff;
+    color: var(--royal);
+    font-weight: 600;
+    border: 2px solid var(--royal);
+    padding: 0.6rem;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
 .login-page .btn-cougar:hover,
-.login-page .btn-cougar:focus {
+.login-page .btn-cougar:focus,
+.login-page .btn-cougar-outline:hover,
+.login-page .btn-cougar-outline:focus {
     background-color: var(--yellow);
+    border-color: var(--yellow);
     color: var(--navy);
 }
