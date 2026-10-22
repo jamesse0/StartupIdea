@@ -8,6 +8,17 @@ import { Listings } from './listings/listings';
 import { PostEvent } from './postEvent/postEvent';
 
 export default function App() {
+  const [userName, setUserName] = React.useState(localStorage.getItem('userName') || '');
+
+  function handleAuthChange(newUserName) {
+    if (newUserName) {
+      localStorage.setItem('userName', newUserName);
+    } else {
+      localStorage.removeItem('userName');
+    }
+    setUserName(newUserName);
+  }
+
   return (
     <BrowserRouter>
       <div className="body">
@@ -45,7 +56,7 @@ export default function App() {
         </nav>
 
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<Login userName={userName} onAuthChange={handleAuthChange} />} />
           <Route path="/home" element={<Home />} />
           <Route path="/listings" element={<Listings />} />
           <Route path="/post" element={<PostEvent />} />

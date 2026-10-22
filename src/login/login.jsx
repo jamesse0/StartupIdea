@@ -1,7 +1,7 @@
 import React from 'react';
 import './login.css';
 
-export function Login() {
+export function Login({ userName, onAuthChange }) {
   return (
     <main className="container login-page">
       <section id="welcome">
@@ -27,7 +27,7 @@ export function Login() {
           <button type="submit" className="btn btn-cougar">Login</button>
         </form>
         {/* Application data placeholder: once authenticated, the logged-in user's name will render here */}
-        <p className="login-status">Currently logged in as: <span id="current-username">[username placeholder]</span></p>
+        <p className="login-status">Currently logged in as: <span id="current-username">{userName || 'nobody yet'}</span></p>
       </section>
 
       <section id="register" className="card-panel">
