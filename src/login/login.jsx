@@ -7,7 +7,8 @@ export function Login({ userName, onAuthChange }) {
   const [email, setEmail] = React.useState('');
   const [isCreating, setIsCreating] = React.useState(false);
 
-  const canSubmit = loginName && loginPassword && (!isCreating || email);
+  const isByuEmail = email.trim().toLowerCase().endsWith('@byu.edu');
+  const canSubmit = loginName && loginPassword && (!isCreating || isByuEmail);
 
   return (
     <main className="container login-page">
@@ -32,6 +33,7 @@ export function Login({ userName, onAuthChange }) {
             <>
               <label htmlFor="register-email" className="form-label">BYU Email</label>
               <input type="email" id="register-email" className="form-control" name="email" placeholder="you@byu.edu" required value={email} onChange={(e) => setEmail(e.target.value)} />
+              {email && !isByuEmail && <p className="field-hint">Must be a @byu.edu email.</p>}
             </>
           )}
 

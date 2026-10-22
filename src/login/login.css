@@ -68,6 +68,13 @@
     color: #6E7CA0;
 }
 
+.login-page .field-hint {
+    color: #C0392B;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+    margin-bottom: 0;
+}
+
 .login-page .login-status {
     margin-top: 1.25rem;
     margin-bottom: 0;
