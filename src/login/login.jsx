@@ -2,6 +2,9 @@ import React from 'react';
 import './login.css';
 
 export function Login({ userName, onAuthChange }) {
+  const [loginName, setLoginName] = React.useState('');
+  const [loginPassword, setLoginPassword] = React.useState('');
+
   return (
     <main className="container login-page">
       <section id="welcome">
@@ -19,12 +22,12 @@ export function Login({ userName, onAuthChange }) {
         <h2>Login</h2>
         <form action="#" method="post">
           <label htmlFor="login-username" className="form-label">Username</label>
-          <input type="text" id="login-username" className="form-control" name="username" placeholder="Enter your username" required />
+          <input type="text" id="login-username" className="form-control" name="username" placeholder="Enter your username" required value={loginName} onChange={(e) => setLoginName(e.target.value)} />
 
           <label htmlFor="login-password" className="form-label">Password</label>
-          <input type="password" id="login-password" className="form-control" name="password" placeholder="Enter your password" required />
+          <input type="password" id="login-password" className="form-control" name="password" placeholder="Enter your password" required value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} />
 
-          <button type="submit" className="btn btn-cougar">Login</button>
+          <button type="submit" className="btn btn-cougar" disabled={!loginName || !loginPassword}>Login</button>
         </form>
         {/* Application data placeholder: once authenticated, the logged-in user's name will render here */}
         <p className="login-status">Currently logged in as: <span id="current-username">{userName || 'nobody yet'}</span></p>
