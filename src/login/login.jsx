@@ -15,6 +15,7 @@ export function Login({ userName, onAuthChange }) {
   const [verifyError, setVerifyError] = React.useState('');
   const [successMessage, setSuccessMessage] = React.useState('');
   const [usernameError, setUsernameError] = React.useState('');
+  const [loginError, setLoginError] = React.useState('');
 
   const isByuEmail = email.trim().toLowerCase().endsWith('@byu.edu');
   const canSubmit = loginName && loginPassword && (!isCreating || isByuEmail);
@@ -28,6 +29,16 @@ export function Login({ userName, onAuthChange }) {
         return;
       }
       setVerificationCode(String(Math.floor(100000 + Math.random() * 900000)));
+    } else {
+      const users = getUsers();
+      const match = Object.keys(users).find((name) => name.toLowerCase() === loginName.trim().toLowerCase());
+      if (!match || users[match].password !== loginPassword) {
+        setLoginError('Incorrect username or password.');
+        return;
+      }
+      onAuthChange(match);
+      setLoginPassword('');
+      setSuccessMessage('');
     }
   }
 
@@ -91,7 +102,7 @@ export function Login({ userName, onAuthChange }) {
             {successMessage && <p className="success-note">{successMessage}</p>}
             <form onSubmit={handleSubmit}>
               <label htmlFor="login-username" className="form-label">Username</label>
-              <input type="text" id="login-username" className="form-control" name="username" placeholder="Enter your username" required value={loginName} onChange={(e) => { setLoginName(e.target.value); setUsernameError(''); }} />
+              <input type="text" id="login-username" className="form-control" name="username" placeholder="Enter your username" required value={loginName} onChange={(e) => { setLoginName(e.target.value); setUsernameError(''); setLoginError(''); }} />
               {usernameError && <p className="field-hint">{usernameError}</p>}
 
               {isCreating && (
@@ -103,13 +114,14 @@ export function Login({ userName, onAuthChange }) {
               )}
 
               <label htmlFor="login-password" className="form-label">Password</label>
-              <input type="password" id="login-password" className="form-control" name="password" placeholder="Enter your password" required value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} />
+              <input type="password" id="login-password" className="form-control" name="password" placeholder="Enter your password" required value={loginPassword} onChange={(e) => { setLoginPassword(e.target.value); setLoginError(''); }} />
+              {loginError && <p className="field-hint">{loginError}</p>}
 
               <div className="button-row">
                 <button type="submit" className="btn btn-cougar" disabled={!canSubmit}>
                   {isCreating ? 'Create Account' : 'Login'}
                 </button>
-                <button type="button" className="btn btn-cougar-outline" onClick={() => { setIsCreating(!isCreating); setSuccessMessage(''); setUsernameError(''); }}>
+                <button type="button" className="btn btn-cougar-outline" onClick={() => { setIsCreating(!isCreating); setSuccessMessage(''); setUsernameError(''); setLoginError(''); }}>
                   {isCreating ? 'Back to login' : 'Create an account'}
                 </button>
               </div>
