@@ -106,9 +106,9 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] I completed the prerequisites for this deliverable (Simon deployed, GitHub link, Git commits)
-- [ ] **All functionality implemented or mocked out** - I did not complete this part of the deliverable.
-- [ ] **Hooks** - I did not complete this part of the deliverable.
+- [x] I completed the prerequisites for this deliverable (Simon deployed, GitHub link, Git commits)
+- [x] **All functionality implemented or mocked out** - Login/register with a mocked @byu.edu verification code, posting events with photos, and deleting your own posts or reporting food as gone (3 reports takes it down). Users and events are stored in localStorage, and a `setInterval` notifier fakes the WebSocket feed with other students posting and reporting.
+- [x] **Hooks** - `useState` for forms, auth, events, and the live feed. `useEffect` loads events, picks the daily tip, refreshes timestamps, and subscribes to the notifier with cleanup. `useNavigate`/`useRef` handle redirects and the file input.
 
 ## 🚀 Service deliverable
 

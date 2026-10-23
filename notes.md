@@ -31,3 +31,14 @@ Interesting things I have learned about React
 - JSX is almost HTML (`className`, `htmlFor`, every tag closes)
 - React Router uses `<Link>` instead of `<a href>` to switch pages without reloading
 - Imported CSS is global, so I prefixed each page's rules to avoid clashes
+
+## React Part 2
+
+Stuff I picked up making it reactive
+- Anything that changes on screen goes in `useState`, and calling the setter re-renders it
+- Lifting state up to App lets every page share the logged-in user
+- `useEffect` with `[]` runs once on load; returning a cleanup function stops timers and listeners from piling up
+- Use `setX(prev => ...)` when updates come from outside React (like the fake WebSocket) so nothing gets lost
+- Hiding a button isn't security. The real check has to happen in the service (and later the server)
+- localStorage only holds ~5MB, so photos get shrunk before saving
+- Keeping all storage in `eventService.js` means the DB deliverable only touches one file
