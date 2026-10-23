@@ -147,6 +147,28 @@
     border-bottom: 1px solid var(--grey);
 }
 
+.listings-page .feed-waiting {
+    margin: 0;
+    font-style: italic;
+    color: #6E7CA0;
+}
+
+.listings-page #live-activity-feed li {
+    animation: fade-in 0.4s ease-out;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .listings-page #live-activity-feed li:last-child {
     border-bottom: none;
 }

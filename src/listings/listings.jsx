@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { getEvents } from '../eventService';
+import { EventNotifier } from '../eventNotifier';
 import './listings.css';
 
 function timeAgo(timestamp, now) {
@@ -15,6 +16,7 @@ function timeAgo(timestamp, now) {
 export function Listings() {
   const [events, setEvents] = React.useState([]);
   const [now, setNow] = React.useState(Date.now());
+  const [feed, setFeed] = React.useState([]);
 
   React.useEffect(() => {
     setEvents(getEvents());
@@ -24,6 +26,14 @@ export function Listings() {
   React.useEffect(() => {
     const timer = setInterval(() => setNow(Date.now()), 60 * 1000);
     return () => clearInterval(timer);
+  }, []);
+
+  React.useEffect(() => {
+    function handleMessage(message) {
+      setFeed((prev) => [message, ...prev].slice(0, 5));
+    }
+    EventNotifier.addHandler(handleMessage);
+    return () => EventNotifier.removeHandler(handleMessage);
   }, []);
 
   return (
@@ -61,10 +71,13 @@ export function Listings() {
       <section id="live-activity" className="card-panel">
         <h2>Live Activity</h2>
         {/* WebSocket data placeholder: updates in real time whenever another user creates or ends a food event */}
-        <ul id="live-activity-feed">
-          <li>[websocket placeholder] A new event was just posted near the JSB.</li>
-          <li>[websocket placeholder] The "Free Pizza - Wilkinson Center" event just ended.</li>
-        </ul>
+        {feed.length === 0 ? (
+          <p className="feed-waiting">Waiting for activity…</p>
+        ) : (
+          <ul id="live-activity-feed">
+            {feed.map((message) => <li key={message.id}>{message.text}</li>)}
+          </ul>
+        )}
       </section>
     </main>
   );
