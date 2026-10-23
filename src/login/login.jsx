@@ -1,6 +1,10 @@
 import React from 'react';
 import './login.css';
 
+function getUsers() {
+  return JSON.parse(localStorage.getItem('users') || '{}');
+}
+
 export function Login({ userName, onAuthChange }) {
   const [loginName, setLoginName] = React.useState('');
   const [loginPassword, setLoginPassword] = React.useState('');
@@ -10,6 +14,7 @@ export function Login({ userName, onAuthChange }) {
   const [codeInput, setCodeInput] = React.useState('');
   const [verifyError, setVerifyError] = React.useState('');
   const [successMessage, setSuccessMessage] = React.useState('');
+  const [usernameError, setUsernameError] = React.useState('');
 
   const isByuEmail = email.trim().toLowerCase().endsWith('@byu.edu');
   const canSubmit = loginName && loginPassword && (!isCreating || isByuEmail);
@@ -17,6 +22,11 @@ export function Login({ userName, onAuthChange }) {
   function handleSubmit(e) {
     e.preventDefault();
     if (isCreating) {
+      const taken = Object.keys(getUsers()).some((name) => name.toLowerCase() === loginName.trim().toLowerCase());
+      if (taken) {
+        setUsernameError('That username is already taken. Pick another, or log in instead.');
+        return;
+      }
       setVerificationCode(String(Math.floor(100000 + Math.random() * 900000)));
     }
   }
@@ -28,7 +38,7 @@ export function Login({ userName, onAuthChange }) {
       return;
     }
     // Mock: plain-text passwords in localStorage until the Service deliverable moves this to the server with BCrypt
-    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    const users = getUsers();
     users[loginName] = { email: email.trim().toLowerCase(), password: loginPassword };
     localStorage.setItem('users', JSON.stringify(users));
 
@@ -81,7 +91,8 @@ export function Login({ userName, onAuthChange }) {
             {successMessage && <p className="success-note">{successMessage}</p>}
             <form onSubmit={handleSubmit}>
               <label htmlFor="login-username" className="form-label">Username</label>
-              <input type="text" id="login-username" className="form-control" name="username" placeholder="Enter your username" required value={loginName} onChange={(e) => setLoginName(e.target.value)} />
+              <input type="text" id="login-username" className="form-control" name="username" placeholder="Enter your username" required value={loginName} onChange={(e) => { setLoginName(e.target.value); setUsernameError(''); }} />
+              {usernameError && <p className="field-hint">{usernameError}</p>}
 
               {isCreating && (
                 <>
@@ -98,7 +109,7 @@ export function Login({ userName, onAuthChange }) {
                 <button type="submit" className="btn btn-cougar" disabled={!canSubmit}>
                   {isCreating ? 'Create Account' : 'Login'}
                 </button>
-                <button type="button" className="btn btn-cougar-outline" onClick={() => { setIsCreating(!isCreating); setSuccessMessage(''); }}>
+                <button type="button" className="btn btn-cougar-outline" onClick={() => { setIsCreating(!isCreating); setSuccessMessage(''); setUsernameError(''); }}>
                   {isCreating ? 'Back to login' : 'Create an account'}
                 </button>
               </div>
