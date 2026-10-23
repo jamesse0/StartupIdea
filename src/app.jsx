@@ -1,7 +1,7 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './app.css';
-import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, NavLink, Route, Routes } from 'react-router-dom';
 import { Login } from './login/login';
 import { Home } from './home/home';
 import { Listings } from './listings/listings';
@@ -61,9 +61,9 @@ export default function App() {
 
         <Routes>
           <Route path="/" element={<Login userName={userName} onAuthChange={handleAuthChange} />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/listings" element={<Listings />} />
-          <Route path="/post" element={<PostEvent />} />
+          <Route path="/home" element={userName ? <Home /> : <Navigate to="/" replace />} />
+          <Route path="/listings" element={userName ? <Listings /> : <Navigate to="/" replace />} />
+          <Route path="/post" element={userName ? <PostEvent /> : <Navigate to="/" replace />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
 
