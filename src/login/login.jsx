@@ -6,9 +6,18 @@ export function Login({ userName, onAuthChange }) {
   const [loginPassword, setLoginPassword] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [isCreating, setIsCreating] = React.useState(false);
+  const [verificationCode, setVerificationCode] = React.useState('');
+  const [codeInput, setCodeInput] = React.useState('');
 
   const isByuEmail = email.trim().toLowerCase().endsWith('@byu.edu');
   const canSubmit = loginName && loginPassword && (!isCreating || isByuEmail);
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (isCreating) {
+      setVerificationCode(String(Math.floor(100000 + Math.random() * 900000)));
+    }
+  }
 
   return (
     <main className="container login-page">
@@ -24,31 +33,51 @@ export function Login({ userName, onAuthChange }) {
       </section>
 
       <section id="login" className="card-panel">
-        <h2>{isCreating ? 'Create an Account' : 'Login'}</h2>
-        <form action="#" method="post">
-          <label htmlFor="login-username" className="form-label">Username</label>
-          <input type="text" id="login-username" className="form-control" name="username" placeholder="Enter your username" required value={loginName} onChange={(e) => setLoginName(e.target.value)} />
+        {verificationCode ? (
+          <>
+            <h2>Verify your email</h2>
+            <p>We sent a 6-digit code to <strong>{email.trim()}</strong>.</p>
+            {/* Mock: the Service deliverable will email this code instead of showing it */}
+            <p className="demo-note">Demo mode: email isn't hooked up yet, so your code is <strong>{verificationCode}</strong>.</p>
+            <form onSubmit={(e) => e.preventDefault()}>
+              <label htmlFor="verify-code" className="form-label">Verification Code</label>
+              <input type="text" id="verify-code" className="form-control code-input" inputMode="numeric" maxLength={6} placeholder="000000" value={codeInput} onChange={(e) => setCodeInput(e.target.value.replace(/\D/g, ''))} />
 
-          {isCreating && (
-            <>
-              <label htmlFor="register-email" className="form-label">BYU Email</label>
-              <input type="email" id="register-email" className="form-control" name="email" placeholder="you@byu.edu" required value={email} onChange={(e) => setEmail(e.target.value)} />
-              {email && !isByuEmail && <p className="field-hint">Must be a @byu.edu email.</p>}
-            </>
-          )}
+              <div className="button-row">
+                <button type="submit" className="btn btn-cougar" disabled={codeInput.length !== 6}>Verify</button>
+                <button type="button" className="btn btn-cougar-outline" onClick={() => { setVerificationCode(''); setCodeInput(''); }}>Back</button>
+              </div>
+            </form>
+          </>
+        ) : (
+          <>
+            <h2>{isCreating ? 'Create an Account' : 'Login'}</h2>
+            <form onSubmit={handleSubmit}>
+              <label htmlFor="login-username" className="form-label">Username</label>
+              <input type="text" id="login-username" className="form-control" name="username" placeholder="Enter your username" required value={loginName} onChange={(e) => setLoginName(e.target.value)} />
 
-          <label htmlFor="login-password" className="form-label">Password</label>
-          <input type="password" id="login-password" className="form-control" name="password" placeholder="Enter your password" required value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} />
+              {isCreating && (
+                <>
+                  <label htmlFor="register-email" className="form-label">BYU Email</label>
+                  <input type="email" id="register-email" className="form-control" name="email" placeholder="you@byu.edu" required value={email} onChange={(e) => setEmail(e.target.value)} />
+                  {email && !isByuEmail && <p className="field-hint">Must be a @byu.edu email.</p>}
+                </>
+              )}
 
-          <div className="button-row">
-            <button type="submit" className="btn btn-cougar" disabled={!canSubmit}>
-              {isCreating ? 'Create Account' : 'Login'}
-            </button>
-            <button type="button" className="btn btn-cougar-outline" onClick={() => setIsCreating(!isCreating)}>
-              {isCreating ? 'Back to login' : 'Create an account'}
-            </button>
-          </div>
-        </form>
+              <label htmlFor="login-password" className="form-label">Password</label>
+              <input type="password" id="login-password" className="form-control" name="password" placeholder="Enter your password" required value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} />
+
+              <div className="button-row">
+                <button type="submit" className="btn btn-cougar" disabled={!canSubmit}>
+                  {isCreating ? 'Create Account' : 'Login'}
+                </button>
+                <button type="button" className="btn btn-cougar-outline" onClick={() => setIsCreating(!isCreating)}>
+                  {isCreating ? 'Back to login' : 'Create an account'}
+                </button>
+              </div>
+            </form>
+          </>
+        )}
         {/* Application data placeholder: once authenticated, the logged-in user's name will render here */}
         <p className="login-status">Currently logged in as: <span id="current-username">{userName || 'nobody yet'}</span></p>
       </section>
