@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { getEvents } from '../eventService';
+import { getEvents, removeEvent, reportGone, GONE_THRESHOLD } from '../eventService';
 import { EventNotifier } from '../eventNotifier';
 import './listings.css';
 
@@ -13,7 +13,7 @@ function timeAgo(timestamp, now) {
   return `${Math.floor(hours / 24)} days ago`;
 }
 
-export function Listings() {
+export function Listings({ userName }) {
   const [events, setEvents] = React.useState([]);
   const [now, setNow] = React.useState(Date.now());
   const [feed, setFeed] = React.useState(EventNotifier.recentMessages());
@@ -39,6 +39,22 @@ export function Listings() {
     return () => EventNotifier.removeHandler(handleMessage);
   }, []);
 
+  function handleDelete(event) {
+    if (!window.confirm(`Delete "${event.title}"?`)) return;
+    if (removeEvent(event.id, userName)) {
+      setEvents((prev) => prev.filter((e) => e.id !== event.id));
+    }
+  }
+
+  function handleReport(event) {
+    const result = reportGone(event.id, userName);
+    setEvents((prev) =>
+      result.removed
+        ? prev.filter((e) => e.id !== event.id)
+        : prev.map((e) => (e.id === event.id ? result.event : e))
+    );
+  }
+
   return (
     <main className="container listings-page">
       <section id="listings-intro">
@@ -62,6 +78,16 @@ export function Listings() {
               <p>Posted by: <span className="poster-username">{event.poster}</span></p>
               <p>Location: {event.location}</p>
               <p>Posted: <span className="post-time">{timeAgo(event.postedAt, now)}</span></p>
+              {event.goneReports?.length > 0 && (
+                <p className="gone-count">🍽️ {event.goneReports.length} of {GONE_THRESHOLD} people say the food's gone</p>
+              )}
+              {event.poster === userName ? (
+                <button type="button" className="btn btn-card-action" onClick={() => handleDelete(event)}>Delete listing</button>
+              ) : (
+                <button type="button" className="btn btn-card-action" disabled={event.goneReports?.includes(userName)} onClick={() => handleReport(event)}>
+                  {event.goneReports?.includes(userName) ? 'Reported ✓' : "Food's gone"}
+                </button>
+              )}
               {/* 3rd party API placeholder: Google Maps will render an interactive map here using the event's location */}
               <div className="map-placeholder">
                 <p>[Google Maps embed placeholder - {event.location}]</p>

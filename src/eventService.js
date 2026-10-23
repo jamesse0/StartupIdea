@@ -2,6 +2,8 @@
 
 const MINUTE = 60 * 1000;
 
+export const GONE_THRESHOLD = 3;
+
 export const DEFAULT_IMAGE = 'https://commons.wikimedia.org/wiki/Special:FilePath/Good_Food_Display_-_NCI_Visuals_Online.jpg?width=400';
 
 function createSeedEvents() {
@@ -69,4 +71,21 @@ export function removeEvent(id, userName) {
   }
   saveEvents(events.filter((e) => e.id !== id));
   return true;
+}
+
+// Anyone except the poster can report the food as gone; enough reports take the listing down
+export function reportGone(id, userName) {
+  const events = getEvents();
+  const event = events.find((e) => e.id === id);
+  const reports = event?.goneReports || [];
+  if (!event || event.poster === userName || reports.includes(userName)) {
+    return { event, removed: false };
+  }
+  const updated = { ...event, goneReports: [...reports, userName] };
+  if (updated.goneReports.length >= GONE_THRESHOLD) {
+    saveEvents(events.filter((e) => e.id !== id));
+    return { event: updated, removed: true };
+  }
+  saveEvents(events.map((e) => (e.id === id ? updated : e)));
+  return { event: updated, removed: false };
 }

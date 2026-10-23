@@ -63,7 +63,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Login userName={userName} onAuthChange={handleAuthChange} />} />
           <Route path="/home" element={userName ? <Home userName={userName} /> : <Navigate to="/" replace />} />
-          <Route path="/listings" element={userName ? <Listings /> : <Navigate to="/" replace />} />
+          <Route path="/listings" element={userName ? <Listings userName={userName} /> : <Navigate to="/" replace />} />
           <Route path="/post" element={userName ? <PostEvent userName={userName} /> : <Navigate to="/" replace />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

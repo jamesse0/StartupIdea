@@ -86,6 +86,37 @@
     margin-bottom: 0;
 }
 
+/* ---------- Card actions ---------- */
+.listings-page .listing-card .gone-count {
+    font-size: 0.8rem;
+    font-style: italic;
+    color: #6E7CA0;
+}
+
+.listings-page .btn-card-action {
+    margin: 0 1.25rem 1rem;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    background-color: #ffffff;
+    color: var(--royal);
+    border: 2px solid var(--royal);
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.listings-page .btn-card-action:hover,
+.listings-page .btn-card-action:focus {
+    background-color: var(--yellow);
+    border-color: var(--yellow);
+    color: var(--navy);
+}
+
+.listings-page .btn-card-action:disabled {
+    background-color: #ffffff;
+    border-color: var(--grey);
+    color: #6E7CA0;
+}
+
 /* ---------- Map placeholder ---------- */
 /* auto top margin pushes the map to the bottom of each card even when the cards differ in height */
 .listings-page .map-placeholder {
