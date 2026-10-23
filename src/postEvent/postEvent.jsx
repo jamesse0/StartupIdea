@@ -1,16 +1,51 @@
 import React from 'react';
 import './postEvent.css';
 
+const DEFAULT_IMAGE = 'https://commons.wikimedia.org/wiki/Special:FilePath/Good_Food_Display_-_NCI_Visuals_Online.jpg?width=400';
+
+// Mock: shrinks the photo to a small JPEG data URL so it fits in localStorage.
+// The Service deliverable will upload the file to the server instead.
+function resizeImage(file, onDone) {
+  const reader = new FileReader();
+  reader.onload = () => {
+    const img = new Image();
+    img.onload = () => {
+      const scale = Math.min(1, 800 / img.width);
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      onDone(canvas.toDataURL('image/jpeg', 0.8));
+    };
+    img.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+}
+
 export function PostEvent() {
   const [title, setTitle] = React.useState('');
   const [foodType, setFoodType] = React.useState('');
   const [location, setLocation] = React.useState('');
   const [description, setDescription] = React.useState('');
+  const [image, setImage] = React.useState('');
+  const fileInput = React.useRef(null);
 
   const canPost = title.trim() && foodType.trim() && location.trim();
 
   function handleSubmit(e) {
     e.preventDefault();
+  }
+
+  function handleImageChange(e) {
+    const file = e.target.files[0];
+    if (file) {
+      resizeImage(file, setImage);
+    }
+  }
+
+  function clearImage() {
+    setImage('');
+    fileInput.current.value = '';
   }
 
   return (
@@ -38,7 +73,13 @@ export function PostEvent() {
           </div>
 
           <label htmlFor="event-image" className="form-label">Upload an Image</label>
-          <input type="file" id="event-image" className="form-control" name="image" accept="image/*" />
+          <input type="file" id="event-image" className="form-control" name="image" accept="image/*" ref={fileInput} onChange={handleImageChange} />
+          <div className="image-preview">
+            <img src={image || DEFAULT_IMAGE} alt="Event preview" />
+            {image
+              ? <button type="button" className="btn btn-link" onClick={clearImage}>Remove photo</button>
+              : <p>No photo chosen, so we'll use this one.</p>}
+          </div>
 
           <label htmlFor="description" className="form-label">Description</label>
           <textarea id="description" className="form-control" name="description" placeholder="Any extra details? How much food is left, how long it'll be there, etc." value={description} onChange={(e) => setDescription(e.target.value)} />
