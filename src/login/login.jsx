@@ -76,11 +76,20 @@ export function Login({ userName, onAuthChange }) {
           opportunities. CougarGrub enables students not only to capitalize on these
           opportunities, but share with others.
         </p>
-        <p>Login below, or create an account with your BYU email.</p>
+        <p>{userName ? "Welcome back! Head home to see what's free on campus." : 'Login below, or create an account with your BYU email.'}</p>
       </section>
 
       <section id="login" className="card-panel">
-        {verificationCode ? (
+        {userName ? (
+          <>
+            <h2>You're logged in</h2>
+            <p>Logged in as <span id="current-username">{userName}</span>.</p>
+            <div className="button-row">
+              <button type="button" className="btn btn-cougar" onClick={() => navigate('/home')}>Go to Home</button>
+              <button type="button" className="btn btn-cougar-outline" onClick={() => onAuthChange('')}>Logout</button>
+            </div>
+          </>
+        ) : verificationCode ? (
           <>
             <h2>Verify your email</h2>
             <p>We sent a 6-digit code to <strong>{email.trim()}</strong>.</p>
@@ -129,8 +138,6 @@ export function Login({ userName, onAuthChange }) {
             </form>
           </>
         )}
-        {/* Application data placeholder: once authenticated, the logged-in user's name will render here */}
-        <p className="login-status">Currently logged in as: <span id="current-username">{userName || 'nobody yet'}</span></p>
       </section>
     </main>
   );

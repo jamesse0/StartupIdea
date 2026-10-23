@@ -99,12 +99,6 @@
     letter-spacing: 0.5rem;
 }
 
-.login-page .login-status {
-    margin-top: 1.25rem;
-    margin-bottom: 0;
-    font-size: 0.9rem;
-}
-
 /* ---------- Buttons ---------- */
 .login-page .button-row {
     display: flex;
