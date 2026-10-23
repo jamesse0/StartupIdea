@@ -1,14 +1,38 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Carousel from 'react-bootstrap/Carousel';
+import { getEvents } from '../eventService';
 import './home.css';
 
-export function Home() {
+const FOOD_TIPS = [
+  'The early Cougar gets the free pizza.',
+  'Club meetings end, leftovers begin. Check the WSC around 8pm.',
+  'Finals week means study-break snacks. Keep an eye on the HBLL.',
+  'Bring a container. Future you will thank you.',
+  "If it says free, it means free. Grab it before it's gone.",
+  'Post what you find. Good karma tastes better than cold pizza.',
+  'Department open houses almost always have cookies.',
+  'Thank whoever brought the food. It keeps the leftovers coming.',
+];
+
+export function Home({ userName }) {
+  const [tip, setTip] = React.useState('');
+  const [recent, setRecent] = React.useState([]);
+
+  // Mock: a random local tip until a 3rd party quote API is hooked up
+  React.useEffect(() => {
+    setTip(FOOD_TIPS[Math.floor(Math.random() * FOOD_TIPS.length)]);
+  }, []);
+
+  React.useEffect(() => {
+    setRecent(getEvents().slice(0, 3));
+  }, []);
+
   return (
     <main className="container home-page">
       <section id="greeting">
         {/* Application data placeholder: rendered from app state once a user is logged in */}
-        <h2>Welcome back, <span id="current-username">[username placeholder]</span>!</h2>
+        <h2>Welcome back, <span id="current-username">{userName}</span>!</h2>
         <p>Here's what's happening around campus today.</p>
       </section>
 
@@ -19,7 +43,7 @@ export function Home() {
             <div className="tip-slide">
               {/* Application data placeholder: a randomly selected tip/quote will be rendered here */}
               <blockquote id="daily-tip">
-                "The early Cougar gets the free pizza." - [random tip placeholder]
+                "{tip}"
               </blockquote>
             </div>
           </Carousel.Item>
@@ -52,10 +76,15 @@ export function Home() {
       <section id="recent-activity" className="card-panel">
         <h2>Recent Activity</h2>
         {/* Database data placeholder: teaser of the most recent food events, full list on the listings page */}
-        <ul id="recent-activity-preview">
-          <li>[Event placeholder] - Free pizza at the Wilkinson Center</li>
-          <li>[Event placeholder] - Leftover cookies at the Testing Center</li>
-        </ul>
+        {recent.length === 0 ? (
+          <p>Nothing posted yet. <Link to="/post">Be the first!</Link></p>
+        ) : (
+          <ul id="recent-activity-preview">
+            {recent.map((event) => (
+              <li key={event.id}>{event.title} <span className="text-muted">(posted by {event.poster})</span></li>
+            ))}
+          </ul>
+        )}
         <p className="see-all"><Link to="/listings">See all current listings</Link></p>
       </section>
     </main>
