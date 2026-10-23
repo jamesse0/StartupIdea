@@ -2,6 +2,17 @@ import React from 'react';
 import './postEvent.css';
 
 export function PostEvent() {
+  const [title, setTitle] = React.useState('');
+  const [foodType, setFoodType] = React.useState('');
+  const [location, setLocation] = React.useState('');
+  const [description, setDescription] = React.useState('');
+
+  const canPost = title.trim() && foodType.trim() && location.trim();
+
+  function handleSubmit(e) {
+    e.preventDefault();
+  }
+
   return (
     <main className="container post-page">
       <section id="post-intro">
@@ -11,15 +22,15 @@ export function PostEvent() {
       </section>
 
       <section id="post-form" className="card-panel">
-        <form action="#" method="post">
+        <form onSubmit={handleSubmit}>
           <label htmlFor="event-title" className="form-label">Event Title</label>
-          <input type="text" id="event-title" className="form-control" name="title" placeholder="e.g. Leftover pizza from club meeting" required />
+          <input type="text" id="event-title" className="form-control" name="title" placeholder="e.g. Leftover pizza from club meeting" required value={title} onChange={(e) => setTitle(e.target.value)} />
 
           <label htmlFor="food-type" className="form-label">Food Type</label>
-          <input type="text" id="food-type" className="form-control" name="foodType" placeholder="e.g. Pizza, donuts, sandwiches" required />
+          <input type="text" id="food-type" className="form-control" name="foodType" placeholder="e.g. Pizza, donuts, sandwiches" required value={foodType} onChange={(e) => setFoodType(e.target.value)} />
 
           <label htmlFor="location" className="form-label">Location</label>
-          <input type="text" id="location" className="form-control" name="location" placeholder="e.g. Wilkinson Center, Room 2260" required />
+          <input type="text" id="location" className="form-control" name="location" placeholder="e.g. Wilkinson Center, Room 2260" required value={location} onChange={(e) => setLocation(e.target.value)} />
 
           {/* 3rd party API placeholder: Google Maps will let the user drop a pin for the exact event location */}
           <div className="map-placeholder">
@@ -30,9 +41,9 @@ export function PostEvent() {
           <input type="file" id="event-image" className="form-control" name="image" accept="image/*" />
 
           <label htmlFor="description" className="form-label">Description</label>
-          <textarea id="description" className="form-control" name="description" placeholder="Any extra details? How much food is left, how long it'll be there, etc." />
+          <textarea id="description" className="form-control" name="description" placeholder="Any extra details? How much food is left, how long it'll be there, etc." value={description} onChange={(e) => setDescription(e.target.value)} />
 
-          <button type="submit" className="btn btn-cougar">Post Event</button>
+          <button type="submit" className="btn btn-cougar" disabled={!canPost}>Post Event</button>
         </form>
       </section>
     </main>
