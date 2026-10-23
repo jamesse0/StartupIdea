@@ -37,21 +37,25 @@ export default function App() {
                 Login
               </NavLink>
             </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/home">
-                Home
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/listings">
-                Current Listings
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/post">
-                Post an Event
-              </NavLink>
-            </li>
+            {userName && (
+              <>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/home">
+                    Home
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/listings">
+                    Current Listings
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/post">
+                    Post an Event
+                  </NavLink>
+                </li>
+              </>
+            )}
           </ul>
         </nav>
 
