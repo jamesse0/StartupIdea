@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './login.css';
 
 function getUsers() {
@@ -6,6 +7,7 @@ function getUsers() {
 }
 
 export function Login({ userName, onAuthChange }) {
+  const navigate = useNavigate();
   const [loginName, setLoginName] = React.useState('');
   const [loginPassword, setLoginPassword] = React.useState('');
   const [email, setEmail] = React.useState('');
@@ -37,8 +39,7 @@ export function Login({ userName, onAuthChange }) {
         return;
       }
       onAuthChange(match);
-      setLoginPassword('');
-      setSuccessMessage('');
+      navigate('/home');
     }
   }
 
