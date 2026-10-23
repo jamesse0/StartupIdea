@@ -8,6 +8,8 @@ export function Login({ userName, onAuthChange }) {
   const [isCreating, setIsCreating] = React.useState(false);
   const [verificationCode, setVerificationCode] = React.useState('');
   const [codeInput, setCodeInput] = React.useState('');
+  const [verifyError, setVerifyError] = React.useState('');
+  const [successMessage, setSuccessMessage] = React.useState('');
 
   const isByuEmail = email.trim().toLowerCase().endsWith('@byu.edu');
   const canSubmit = loginName && loginPassword && (!isCreating || isByuEmail);
@@ -17,6 +19,29 @@ export function Login({ userName, onAuthChange }) {
     if (isCreating) {
       setVerificationCode(String(Math.floor(100000 + Math.random() * 900000)));
     }
+  }
+
+  function handleVerify(e) {
+    e.preventDefault();
+    if (codeInput !== verificationCode) {
+      setVerifyError("That code doesn't match. Try again.");
+      return;
+    }
+    // Mock: plain-text passwords in localStorage until the Service deliverable moves this to the server with BCrypt
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    users[loginName] = { email: email.trim().toLowerCase(), password: loginPassword };
+    localStorage.setItem('users', JSON.stringify(users));
+
+    setVerificationCode('');
+    setCodeInput('');
+    setIsCreating(false);
+    setSuccessMessage('Account created! Log in below.');
+  }
+
+  function cancelVerify() {
+    setVerificationCode('');
+    setCodeInput('');
+    setVerifyError('');
   }
 
   return (
@@ -39,19 +64,21 @@ export function Login({ userName, onAuthChange }) {
             <p>We sent a 6-digit code to <strong>{email.trim()}</strong>.</p>
             {/* Mock: the Service deliverable will email this code instead of showing it */}
             <p className="demo-note">Demo mode: email isn't hooked up yet, so your code is <strong>{verificationCode}</strong>.</p>
-            <form onSubmit={(e) => e.preventDefault()}>
+            <form onSubmit={handleVerify}>
               <label htmlFor="verify-code" className="form-label">Verification Code</label>
-              <input type="text" id="verify-code" className="form-control code-input" inputMode="numeric" maxLength={6} placeholder="000000" value={codeInput} onChange={(e) => setCodeInput(e.target.value.replace(/\D/g, ''))} />
+              <input type="text" id="verify-code" className="form-control code-input" inputMode="numeric" maxLength={6} placeholder="000000" value={codeInput} onChange={(e) => { setCodeInput(e.target.value.replace(/\D/g, '')); setVerifyError(''); }} />
+              {verifyError && <p className="field-hint">{verifyError}</p>}
 
               <div className="button-row">
                 <button type="submit" className="btn btn-cougar" disabled={codeInput.length !== 6}>Verify</button>
-                <button type="button" className="btn btn-cougar-outline" onClick={() => { setVerificationCode(''); setCodeInput(''); }}>Back</button>
+                <button type="button" className="btn btn-cougar-outline" onClick={cancelVerify}>Back</button>
               </div>
             </form>
           </>
         ) : (
           <>
             <h2>{isCreating ? 'Create an Account' : 'Login'}</h2>
+            {successMessage && <p className="success-note">{successMessage}</p>}
             <form onSubmit={handleSubmit}>
               <label htmlFor="login-username" className="form-label">Username</label>
               <input type="text" id="login-username" className="form-control" name="username" placeholder="Enter your username" required value={loginName} onChange={(e) => setLoginName(e.target.value)} />
@@ -71,7 +98,7 @@ export function Login({ userName, onAuthChange }) {
                 <button type="submit" className="btn btn-cougar" disabled={!canSubmit}>
                   {isCreating ? 'Create Account' : 'Login'}
                 </button>
-                <button type="button" className="btn btn-cougar-outline" onClick={() => setIsCreating(!isCreating)}>
+                <button type="button" className="btn btn-cougar-outline" onClick={() => { setIsCreating(!isCreating); setSuccessMessage(''); }}>
                   {isCreating ? 'Back to login' : 'Create an account'}
                 </button>
               </div>
