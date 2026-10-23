@@ -1,9 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { addEvent } from '../eventService';
+import { addEvent, DEFAULT_IMAGE } from '../eventService';
+import { EventNotifier } from '../eventNotifier';
 import './postEvent.css';
-
-const DEFAULT_IMAGE = 'https://commons.wikimedia.org/wiki/Special:FilePath/Good_Food_Display_-_NCI_Visuals_Online.jpg?width=400';
 
 // Mock: shrinks the photo to a small JPEG data URL so it fits in localStorage.
 // The Service deliverable will upload the file to the server instead.
@@ -39,7 +38,7 @@ export function PostEvent({ userName }) {
   function handleSubmit(e) {
     e.preventDefault();
     try {
-      addEvent(
+      const event = addEvent(
         {
           title: title.trim(),
           foodType: foodType.trim(),
@@ -49,6 +48,7 @@ export function PostEvent({ userName }) {
         },
         userName
       );
+      EventNotifier.broadcast(`${userName} just posted "${event.title}".`, event);
       navigate('/listings');
     } catch {
       setSaveError("Couldn't save your post. Storage may be full, so try removing the photo.");

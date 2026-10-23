@@ -16,7 +16,7 @@ function timeAgo(timestamp, now) {
 export function Listings() {
   const [events, setEvents] = React.useState([]);
   const [now, setNow] = React.useState(Date.now());
-  const [feed, setFeed] = React.useState([]);
+  const [feed, setFeed] = React.useState(EventNotifier.recentMessages());
 
   React.useEffect(() => {
     setEvents(getEvents());
@@ -31,6 +31,9 @@ export function Listings() {
   React.useEffect(() => {
     function handleMessage(message) {
       setFeed((prev) => [message, ...prev].slice(0, 5));
+      if (message.event) {
+        setEvents((prev) => [message.event, ...prev]);
+      }
     }
     EventNotifier.addHandler(handleMessage);
     return () => EventNotifier.removeHandler(handleMessage);

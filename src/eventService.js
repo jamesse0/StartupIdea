@@ -2,6 +2,8 @@
 
 const MINUTE = 60 * 1000;
 
+export const DEFAULT_IMAGE = 'https://commons.wikimedia.org/wiki/Special:FilePath/Good_Food_Display_-_NCI_Visuals_Online.jpg?width=400';
+
 function createSeedEvents() {
   const now = Date.now();
   return [
