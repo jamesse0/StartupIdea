@@ -77,6 +77,15 @@
     color: var(--royal);
 }
 
+/* ---------- Empty state ---------- */
+.listings-page #no-listings {
+    text-align: center;
+}
+
+.listings-page #no-listings p {
+    margin-bottom: 0;
+}
+
 /* ---------- Map placeholder ---------- */
 /* auto top margin pushes the map to the bottom of each card even when the cards differ in height */
 .listings-page .map-placeholder {

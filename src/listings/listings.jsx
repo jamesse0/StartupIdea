@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { getEvents } from '../eventService';
 import './listings.css';
 
@@ -33,22 +34,29 @@ export function Listings() {
       </section>
 
       {/* Database data placeholder: each article below represents one food event record pulled from the database */}
-      <section id="listings" className="listing-grid">
-        {events.map((event) => (
-          <article className="listing-card" key={event.id}>
-            <h3>{event.title}</h3>
-            <img src={event.image} alt={event.foodType} />
-            {event.description && <p>{event.description}</p>}
-            <p>Posted by: <span className="poster-username">{event.poster}</span></p>
-            <p>Location: {event.location}</p>
-            <p>Posted: <span className="post-time">{timeAgo(event.postedAt, now)}</span></p>
-            {/* 3rd party API placeholder: Google Maps will render an interactive map here using the event's location */}
-            <div className="map-placeholder">
-              <p>[Google Maps embed placeholder]</p>
-            </div>
-          </article>
-        ))}
-      </section>
+      {events.length === 0 ? (
+        <section id="no-listings" className="card-panel">
+          <h3>No free food right now 😢</h3>
+          <p>Spotted some on campus? <Link to="/post">Post it</Link> so other Cougars can grab it.</p>
+        </section>
+      ) : (
+        <section id="listings" className="listing-grid">
+          {events.map((event) => (
+            <article className="listing-card" key={event.id}>
+              <h3>{event.title}</h3>
+              <img src={event.image} alt={event.foodType} />
+              {event.description && <p>{event.description}</p>}
+              <p>Posted by: <span className="poster-username">{event.poster}</span></p>
+              <p>Location: {event.location}</p>
+              <p>Posted: <span className="post-time">{timeAgo(event.postedAt, now)}</span></p>
+              {/* 3rd party API placeholder: Google Maps will render an interactive map here using the event's location */}
+              <div className="map-placeholder">
+                <p>[Google Maps embed placeholder - {event.location}]</p>
+              </div>
+            </article>
+          ))}
+        </section>
+      )}
 
       <section id="live-activity" className="card-panel">
         <h2>Live Activity</h2>
