@@ -27,6 +27,7 @@ export default function App() {
           <div>
             <h1>CougarGrub</h1>
             <p className="tagline">Free food, shared by Cougars, for Cougars.</p>
+            {userName && <p className="header-user">Hi, {userName}!</p>}
           </div>
         </header>
 

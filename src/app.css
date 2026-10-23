@@ -80,6 +80,13 @@ img {
     font-style: italic;
 }
 
+.header-user {
+    margin: 0.4rem 0 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--yellow);
+}
+
 @media (max-width: 575px) {
     .site-header img {
         width: 56px;
