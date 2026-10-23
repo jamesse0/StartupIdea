@@ -48,7 +48,7 @@ export function PostEvent({ userName }) {
         },
         userName
       );
-      EventNotifier.broadcast(`${userName} just posted "${event.title}".`, event);
+      EventNotifier.broadcast(`${userName} just posted "${event.title}".`, { event });
       navigate('/listings');
     } catch {
       setSaveError("Couldn't save your post. Storage may be full, so try removing the photo.");

@@ -79,7 +79,7 @@ export function reportGone(id, userName) {
   const event = events.find((e) => e.id === id);
   const reports = event?.goneReports || [];
   if (!event || event.poster === userName || reports.includes(userName)) {
-    return { event, removed: false };
+    return null;
   }
   const updated = { ...event, goneReports: [...reports, userName] };
   if (updated.goneReports.length >= GONE_THRESHOLD) {

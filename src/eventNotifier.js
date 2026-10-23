@@ -1,4 +1,4 @@
-import { addEvent, getEvents, DEFAULT_IMAGE } from './eventService';
+import { addEvent, getEvents, reportGone, DEFAULT_IMAGE, GONE_THRESHOLD } from './eventService';
 
 const FAKE_USERS = ['mia_r', 'tbennett', 'cosmo_fan', 'jdawg23', 'sarah.k', 'byu_ben'];
 const FOODS = ['Pizza', 'Donuts', 'Cookies', 'Bagels', 'Tacos', 'Cupcakes'];
@@ -22,28 +22,55 @@ class EventNotifierClass {
     // Mock: fake activity from other students until the WebSocket deliverable
     setInterval(() => {
       const user = pick(FAKE_USERS);
-      const food = pick(FOODS);
-      const place = pick(PLACES);
-      if (Math.random() < 1 / 3 && getEvents().length < MAX_EVENTS) {
-        const event = addEvent(
-          {
-            title: `Free ${food} - ${place}`,
-            foodType: food,
-            location: place,
-            description: '',
-            image: FOOD_IMAGES[food] || DEFAULT_IMAGE,
-          },
-          user
-        );
-        this.broadcast(`${user} just posted "${event.title}".`, event);
-      } else {
-        this.broadcast(`${user} just grabbed some ${food.toLowerCase()} at the ${place}.`);
+      const roll = Math.random();
+      if (roll < 0.3 && getEvents().length < MAX_EVENTS) {
+        this.fakePost(user);
+        return;
       }
+      if (roll < 0.55 && this.fakeReport(user)) {
+        return;
+      }
+      this.broadcast(`${user} just grabbed some ${pick(FOODS).toLowerCase()} at the ${pick(PLACES)}.`);
     }, 8000);
   }
 
-  broadcast(text, event) {
-    const message = { id: crypto.randomUUID(), text, event };
+  fakePost(user) {
+    const food = pick(FOODS);
+    const place = pick(PLACES);
+    const event = addEvent(
+      {
+        title: `Free ${food} - ${place}`,
+        foodType: food,
+        location: place,
+        description: '',
+        image: FOOD_IMAGES[food] || DEFAULT_IMAGE,
+      },
+      user
+    );
+    this.broadcast(`${user} just posted "${event.title}".`, { event });
+  }
+
+  // Returns false when this user has nothing left they're allowed to report
+  fakeReport(user) {
+    const reportable = getEvents().filter((e) => e.poster !== user && !(e.goneReports || []).includes(user));
+    if (reportable.length === 0) {
+      return false;
+    }
+    const result = reportGone(pick(reportable).id, user);
+    this.broadcastReport(result, user);
+    return true;
+  }
+
+  broadcastReport({ event, removed }, user) {
+    if (removed) {
+      this.broadcast(`"${event.title}" was taken down. ${GONE_THRESHOLD} people said the food's gone.`, { endedId: event.id });
+    } else {
+      this.broadcast(`${user} says the food's gone at "${event.title}" (${event.goneReports.length}/${GONE_THRESHOLD}).`, { updatedEvent: event });
+    }
+  }
+
+  broadcast(text, data = {}) {
+    const message = { id: crypto.randomUUID(), text, ...data };
     this.messages = [message, ...this.messages].slice(0, 5);
     this.handlers.forEach((handler) => handler(message));
   }

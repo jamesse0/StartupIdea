@@ -34,6 +34,12 @@ export function Listings({ userName }) {
       if (message.event) {
         setEvents((prev) => [message.event, ...prev]);
       }
+      if (message.updatedEvent) {
+        setEvents((prev) => prev.map((e) => (e.id === message.updatedEvent.id ? message.updatedEvent : e)));
+      }
+      if (message.endedId) {
+        setEvents((prev) => prev.filter((e) => e.id !== message.endedId));
+      }
     }
     EventNotifier.addHandler(handleMessage);
     return () => EventNotifier.removeHandler(handleMessage);
@@ -42,17 +48,15 @@ export function Listings({ userName }) {
   function handleDelete(event) {
     if (!window.confirm(`Delete "${event.title}"?`)) return;
     if (removeEvent(event.id, userName)) {
-      setEvents((prev) => prev.filter((e) => e.id !== event.id));
+      EventNotifier.broadcast(`${userName} took down "${event.title}".`, { endedId: event.id });
     }
   }
 
   function handleReport(event) {
     const result = reportGone(event.id, userName);
-    setEvents((prev) =>
-      result.removed
-        ? prev.filter((e) => e.id !== event.id)
-        : prev.map((e) => (e.id === event.id ? result.event : e))
-    );
+    if (result) {
+      EventNotifier.broadcastReport(result, userName);
+    }
   }
 
   return (
