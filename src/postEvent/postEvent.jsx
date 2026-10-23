@@ -1,4 +1,6 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { addEvent } from '../eventService';
 import './postEvent.css';
 
 const DEFAULT_IMAGE = 'https://commons.wikimedia.org/wiki/Special:FilePath/Good_Food_Display_-_NCI_Visuals_Online.jpg?width=400';
@@ -22,18 +24,35 @@ function resizeImage(file, onDone) {
   reader.readAsDataURL(file);
 }
 
-export function PostEvent() {
+export function PostEvent({ userName }) {
+  const navigate = useNavigate();
   const [title, setTitle] = React.useState('');
   const [foodType, setFoodType] = React.useState('');
   const [location, setLocation] = React.useState('');
   const [description, setDescription] = React.useState('');
   const [image, setImage] = React.useState('');
   const fileInput = React.useRef(null);
+  const [saveError, setSaveError] = React.useState('');
 
   const canPost = title.trim() && foodType.trim() && location.trim();
 
   function handleSubmit(e) {
     e.preventDefault();
+    try {
+      addEvent(
+        {
+          title: title.trim(),
+          foodType: foodType.trim(),
+          location: location.trim(),
+          description: description.trim(),
+          image: image || DEFAULT_IMAGE,
+        },
+        userName
+      );
+      navigate('/listings');
+    } catch {
+      setSaveError("Couldn't save your post. Storage may be full, so try removing the photo.");
+    }
   }
 
   function handleImageChange(e) {
@@ -84,6 +103,7 @@ export function PostEvent() {
           <label htmlFor="description" className="form-label">Description</label>
           <textarea id="description" className="form-control" name="description" placeholder="Any extra details? How much food is left, how long it'll be there, etc." value={description} onChange={(e) => setDescription(e.target.value)} />
 
+          {saveError && <p className="field-hint">{saveError}</p>}
           <button type="submit" className="btn btn-cougar" disabled={!canPost}>Post Event</button>
         </form>
       </section>

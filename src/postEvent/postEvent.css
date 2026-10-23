@@ -160,6 +160,13 @@
     color: var(--royal);
 }
 
+.post-page .field-hint {
+    color: #C0392B;
+    font-size: 0.85rem;
+    margin-top: 1rem;
+    margin-bottom: 0;
+}
+
 /* ---------- Buttons ---------- */
 .post-page .btn-cougar {
     margin-top: 1.5rem;
