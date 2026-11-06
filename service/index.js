@@ -2,6 +2,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import bcrypt from 'bcryptjs';
 import { v4 as uuid } from 'uuid';
+import { randomInt } from 'node:crypto';
 
 const app = express();
 
@@ -12,6 +13,11 @@ const authCookieName = 'token';
 
 // In-memory storage until the DB deliverable moves this to MongoDB
 const users = [];
+
+// Signups waiting on their email code, keyed by a pendingId the frontend holds onto
+const pendingSignups = new Map();
+const CODE_LIFETIME = 10 * 60 * 1000;
+const MAX_CODE_ATTEMPTS = 5;
 
 // Parse JSON request bodies
 app.use(express.json());
@@ -31,7 +37,7 @@ apiRouter.get('/status', (_req, res) => {
   res.send({ status: 'ok' });
 });
 
-// Create a new account and log the user in
+// Start a signup: validate the details and hold them until the email code is verified
 apiRouter.post('/auth/create', async (req, res) => {
   const body = req.body ?? {};
   const userName = body.userName?.trim();
@@ -44,14 +50,53 @@ apiRouter.post('/auth/create', async (req, res) => {
   if (!email.endsWith('@byu.edu')) {
     return res.status(400).send({ msg: 'Must be a @byu.edu email.' });
   }
-  if (findUser('userName', userName)) {
-    return res.status(409).send({ msg: 'That username is already taken. Pick another, or log in instead.' });
-  }
-  if (findUser('email', email)) {
-    return res.status(409).send({ msg: 'An account with that email already exists.' });
+  const conflict = findConflict(userName, email);
+  if (conflict) {
+    return res.status(409).send({ msg: conflict });
   }
 
-  const user = await createUser(userName, email, password);
+  clearExpiredSignups();
+  const pendingId = uuid();
+  const code = String(randomInt(100000, 1000000));
+  pendingSignups.set(pendingId, {
+    userName,
+    email,
+    passwordHash: await bcrypt.hash(password, 10),
+    code,
+    expiresAt: Date.now() + CODE_LIFETIME,
+    attempts: 0,
+  });
+
+  // Demo mode: email isn't hooked up, so the code comes back in the response for the frontend to show
+  res.send({ pendingId, demoCode: code });
+});
+
+// Finish a signup: check the email code, then create the account and log the user in
+apiRouter.post('/auth/verify', (req, res) => {
+  const { pendingId, code } = req.body ?? {};
+  const pending = pendingSignups.get(pendingId);
+
+  if (!pending || pending.expiresAt < Date.now()) {
+    pendingSignups.delete(pendingId);
+    return res.status(410).send({ msg: 'That code expired. Start over to get a new one.' });
+  }
+  if (String(code) !== pending.code) {
+    pending.attempts += 1;
+    if (pending.attempts >= MAX_CODE_ATTEMPTS) {
+      pendingSignups.delete(pendingId);
+      return res.status(410).send({ msg: 'Too many wrong codes. Start over to get a new one.' });
+    }
+    return res.status(400).send({ msg: "That code doesn't match. Try again." });
+  }
+
+  // Someone else may have finished signing up with the same name or email in the meantime
+  pendingSignups.delete(pendingId);
+  const conflict = findConflict(pending.userName, pending.email);
+  if (conflict) {
+    return res.status(409).send({ msg: conflict });
+  }
+
+  const user = createUser(pending.userName, pending.email, pending.passwordHash);
   setAuthCookie(res, user.token);
   res.send({ userName: user.userName });
 });
@@ -104,11 +149,31 @@ function findUser(field, value) {
   return users.find((u) => u[field]?.toLowerCase() === value.toLowerCase()) || null;
 }
 
-async function createUser(userName, email, password) {
-  const passwordHash = await bcrypt.hash(password, 10);
+// Returns an error message if the username or email already belongs to an account
+function findConflict(userName, email) {
+  if (findUser('userName', userName)) {
+    return 'That username is already taken. Pick another, or log in instead.';
+  }
+  if (findUser('email', email)) {
+    return 'An account with that email already exists.';
+  }
+  return null;
+}
+
+// The password is already hashed with bcrypt when the signup starts
+function createUser(userName, email, passwordHash) {
   const user = { userName, email, password: passwordHash, token: uuid() };
   users.push(user);
   return user;
+}
+
+function clearExpiredSignups() {
+  const now = Date.now();
+  for (const [id, pending] of pendingSignups) {
+    if (pending.expiresAt < now) {
+      pendingSignups.delete(id);
+    }
+  }
 }
 
 // httpOnly keeps the token away from frontend JavaScript; secure and sameSite limit where it gets sent
