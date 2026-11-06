@@ -6,19 +6,32 @@ import { Login } from './login/login';
 import { Home } from './home/home';
 import { Listings } from './listings/listings';
 import { PostEvent } from './postEvent/postEvent';
+import { onUnauthorized } from './eventService';
 
 export default function App() {
   // The cached name lets the page render right away; the server check below has the final say
   const [userName, setUserName] = React.useState(localStorage.getItem('userName') || '');
+  const [sessionExpired, setSessionExpired] = React.useState(false);
 
   function handleAuthChange(newUserName) {
     if (newUserName) {
       localStorage.setItem('userName', newUserName);
+      setSessionExpired(false);
     } else {
       localStorage.removeItem('userName');
     }
     setUserName(newUserName);
   }
+
+  // If any events request comes back 401, the session is gone: log out locally and let the
+  // route guards send the user to the login page with a note explaining why
+  React.useEffect(() => {
+    onUnauthorized(() => {
+      handleAuthChange('');
+      setSessionExpired(true);
+    });
+    return () => onUnauthorized(null);
+  }, []);
 
   // On load, ask the server who's logged in so a stale cached name (expired token, server restart) gets cleared
   React.useEffect(() => {
@@ -86,7 +99,7 @@ export default function App() {
         </nav>
 
         <Routes>
-          <Route path="/" element={<Login userName={userName} onAuthChange={handleAuthChange} onLogout={handleLogout} />} />
+          <Route path="/" element={<Login userName={userName} sessionExpired={sessionExpired} onAuthChange={handleAuthChange} onLogout={handleLogout} />} />
           <Route path="/home" element={userName ? <Home userName={userName} /> : <Navigate to="/" replace />} />
           <Route path="/listings" element={userName ? <Listings userName={userName} /> : <Navigate to="/" replace />} />
           <Route path="/post" element={userName ? <PostEvent userName={userName} /> : <Navigate to="/" replace />} />

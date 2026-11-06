@@ -14,6 +14,13 @@ export class ApiError extends Error {
   }
 }
 
+// The app registers a callback here so any 401 (expired or missing session) logs the user out
+let unauthorizedHandler = null;
+
+export function onUnauthorized(handler) {
+  unauthorizedHandler = handler;
+}
+
 async function request(url, options = {}) {
   let response;
   try {
@@ -25,6 +32,9 @@ async function request(url, options = {}) {
     throw new ApiError(0, SERVER_ERROR);
   }
   const data = await response.json().catch(() => null);
+  if (response.status === 401) {
+    unauthorizedHandler?.();
+  }
   if (!response.ok) {
     throw new ApiError(response.status, data?.msg || SERVER_ERROR);
   }

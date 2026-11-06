@@ -15,7 +15,7 @@ async function sendJson(url, method, body) {
 
 const SERVER_ERROR = "Couldn't reach CougarGrub right now. Try again in a moment.";
 
-export function Login({ userName, onAuthChange, onLogout }) {
+export function Login({ userName, sessionExpired, onAuthChange, onLogout }) {
   const navigate = useNavigate();
   const [loginName, setLoginName] = React.useState('');
   const [loginPassword, setLoginPassword] = React.useState('');
@@ -168,6 +168,7 @@ export function Login({ userName, onAuthChange, onLogout }) {
         ) : (
           <>
             <h2>{isCreating ? 'Create an Account' : 'Login'}</h2>
+            {sessionExpired && !isCreating && <p className="field-hint">Your session expired. Please log in again.</p>}
             {formError && <p className="field-hint">{formError}</p>}
             <form onSubmit={handleSubmit}>
               <label htmlFor="login-username" className="form-label">Username</label>
