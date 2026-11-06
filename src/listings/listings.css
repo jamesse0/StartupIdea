@@ -178,6 +178,12 @@
     border-bottom: 1px solid var(--grey);
 }
 
+.listings-page .listing-error {
+    color: #C0392B;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
 .listings-page .feed-waiting {
     margin: 0;
     font-style: italic;

@@ -17,7 +17,9 @@ const FOOD_TIPS = [
 
 export function Home({ userName }) {
   const [tip, setTip] = React.useState('');
-  const [recent, setRecent] = React.useState([]);
+  // null until the server answers, so we don't flash "Nothing posted yet" while loading
+  const [recent, setRecent] = React.useState(null);
+  const [loadError, setLoadError] = React.useState('');
 
   // Mock: a random local tip until a 3rd party quote API is hooked up
   React.useEffect(() => {
@@ -25,7 +27,9 @@ export function Home({ userName }) {
   }, []);
 
   React.useEffect(() => {
-    setRecent(getEvents().slice(0, 3));
+    getEvents()
+      .then((events) => setRecent(events.slice(0, 3)))
+      .catch((err) => setLoadError(err.message));
   }, []);
 
   return (
@@ -75,8 +79,12 @@ export function Home({ userName }) {
 
       <section id="recent-activity" className="card-panel">
         <h2>Recent Activity</h2>
-        {/* Database data placeholder: teaser of the most recent food events, full list on the listings page */}
-        {recent.length === 0 ? (
+        {/* Teaser of the most recent food events from the server, full list on the listings page */}
+        {loadError ? (
+          <p className="text-danger">{loadError}</p>
+        ) : recent === null ? (
+          <p className="text-muted">Loading…</p>
+        ) : recent.length === 0 ? (
           <p>Nothing posted yet. <Link to="/post">Be the first!</Link></p>
         ) : (
           <ul id="recent-activity-preview">

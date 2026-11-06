@@ -4,8 +4,7 @@ import { addEvent, DEFAULT_IMAGE } from '../eventService';
 import { EventNotifier } from '../eventNotifier';
 import './postEvent.css';
 
-// Mock: shrinks the photo to a small JPEG data URL so it fits in localStorage.
-// The Service deliverable will upload the file to the server instead.
+// Shrinks the photo to a small JPEG data URL so the upload to the server stays well under its size limit
 function resizeImage(file, onDone) {
   const reader = new FileReader();
   reader.onload = () => {
@@ -32,26 +31,27 @@ export function PostEvent({ userName }) {
   const [image, setImage] = React.useState('');
   const fileInput = React.useRef(null);
   const [saveError, setSaveError] = React.useState('');
+  const [saving, setSaving] = React.useState(false);
 
-  const canPost = title.trim() && foodType.trim() && location.trim();
+  const canPost = title.trim() && foodType.trim() && location.trim() && !saving;
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
+    setSaveError('');
+    setSaving(true);
     try {
-      const event = addEvent(
-        {
-          title: title.trim(),
-          foodType: foodType.trim(),
-          location: location.trim(),
-          description: description.trim(),
-          image: image || DEFAULT_IMAGE,
-        },
-        userName
-      );
+      const event = await addEvent({
+        title: title.trim(),
+        foodType: foodType.trim(),
+        location: location.trim(),
+        description: description.trim(),
+        image: image || DEFAULT_IMAGE,
+      });
       EventNotifier.broadcast(`${userName} just posted "${event.title}".`, { event });
       navigate('/listings');
-    } catch {
-      setSaveError("Couldn't save your post. Storage may be full, so try removing the photo.");
+    } catch (err) {
+      setSaveError(err.message);
+      setSaving(false);
     }
   }
 
@@ -104,7 +104,7 @@ export function PostEvent({ userName }) {
           <textarea id="description" className="form-control" name="description" placeholder="Any extra details? How much food is left, how long it'll be there, etc." value={description} onChange={(e) => setDescription(e.target.value)} />
 
           {saveError && <p className="field-hint">{saveError}</p>}
-          <button type="submit" className="btn btn-cougar" disabled={!canPost}>Post Event</button>
+          <button type="submit" className="btn btn-cougar" disabled={!canPost}>{saving ? 'Posting…' : 'Post Event'}</button>
         </form>
       </section>
     </main>

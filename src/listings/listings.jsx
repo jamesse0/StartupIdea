@@ -14,12 +14,17 @@ function timeAgo(timestamp, now) {
 }
 
 export function Listings({ userName }) {
-  const [events, setEvents] = React.useState([]);
+  // null until the server answers, so we don't flash "No free food right now" while loading
+  const [events, setEvents] = React.useState(null);
+  const [loadError, setLoadError] = React.useState('');
+  const [actionError, setActionError] = React.useState('');
   const [now, setNow] = React.useState(Date.now());
   const [feed, setFeed] = React.useState(EventNotifier.recentMessages());
 
   React.useEffect(() => {
-    setEvents(getEvents());
+    getEvents()
+      .then(setEvents)
+      .catch((err) => setLoadError(err.message));
   }, []);
 
   // Re-render every minute so the "x min ago" times stay current
@@ -31,31 +36,47 @@ export function Listings({ userName }) {
   React.useEffect(() => {
     function handleMessage(message) {
       setFeed((prev) => [message, ...prev].slice(0, 5));
+      // Skip list updates if the listings haven't loaded yet; the fetch will already include the change
       if (message.event) {
-        setEvents((prev) => [message.event, ...prev]);
+        setEvents((prev) => prev && [message.event, ...prev]);
       }
       if (message.updatedEvent) {
-        setEvents((prev) => prev.map((e) => (e.id === message.updatedEvent.id ? message.updatedEvent : e)));
+        setEvents((prev) => prev && prev.map((e) => (e.id === message.updatedEvent.id ? message.updatedEvent : e)));
       }
       if (message.endedId) {
-        setEvents((prev) => prev.filter((e) => e.id !== message.endedId));
+        setEvents((prev) => prev && prev.filter((e) => e.id !== message.endedId));
       }
     }
     EventNotifier.addHandler(handleMessage);
     return () => EventNotifier.removeHandler(handleMessage);
   }, []);
 
-  function handleDelete(event) {
+  // A 404 means someone else already took the listing down, so just drop the stale card
+  function handleActionError(err, event) {
+    if (err.status === 404) {
+      setEvents((prev) => prev.filter((e) => e.id !== event.id));
+    }
+    setActionError(err.message);
+  }
+
+  async function handleDelete(event) {
     if (!window.confirm(`Delete "${event.title}"?`)) return;
-    if (removeEvent(event.id, userName)) {
+    setActionError('');
+    try {
+      await removeEvent(event.id);
       EventNotifier.broadcast(`${userName} took down "${event.title}".`, { endedId: event.id });
+    } catch (err) {
+      handleActionError(err, event);
     }
   }
 
-  function handleReport(event) {
-    const result = reportGone(event.id, userName);
-    if (result) {
+  async function handleReport(event) {
+    setActionError('');
+    try {
+      const result = await reportGone(event.id);
       EventNotifier.broadcastReport(result, userName);
+    } catch (err) {
+      handleActionError(err, event);
     }
   }
 
@@ -66,8 +87,18 @@ export function Listings({ userName }) {
         <p>Free food events currently posted by other students. Grab it before it's gone!</p>
       </section>
 
-      {/* Database data placeholder: each article below represents one food event record pulled from the database */}
-      {events.length === 0 ? (
+      {actionError && <p className="listing-error">{actionError}</p>}
+
+      {/* Each article below is one food event record from the server */}
+      {loadError ? (
+        <section id="no-listings" className="card-panel">
+          <p className="listing-error">{loadError}</p>
+        </section>
+      ) : events === null ? (
+        <section id="no-listings" className="card-panel">
+          <p className="feed-waiting">Loading listings…</p>
+        </section>
+      ) : events.length === 0 ? (
         <section id="no-listings" className="card-panel">
           <h3>No free food right now 😢</h3>
           <p>Spotted some on campus? <Link to="/post">Post it</Link> so other Cougars can grab it.</p>

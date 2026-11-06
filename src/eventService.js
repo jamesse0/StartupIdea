@@ -1,91 +1,52 @@
-// Mock: events live in localStorage until the DB deliverable swaps these functions for calls to the backend
-
-const MINUTE = 60 * 1000;
+// Talks to the backend's /api/events endpoints. Every function throws an ApiError when a request fails,
+// carrying the HTTP status and the server's message so pages can show it.
 
 export const GONE_THRESHOLD = 3;
 
 export const DEFAULT_IMAGE = 'https://commons.wikimedia.org/wiki/Special:FilePath/Good_Food_Display_-_NCI_Visuals_Online.jpg?width=400';
 
-function createSeedEvents() {
-  const now = Date.now();
-  return [
-    {
-      id: 'seed-1',
-      title: 'Free Pizza - Wilkinson Center',
-      foodType: 'Pizza',
-      location: 'Wilkinson Student Center, Room 2260',
-      description: 'Leftovers from a club meeting, about 6 boxes.',
-      image: 'https://commons.wikimedia.org/wiki/Special:FilePath/Pizza_pie.jpg?width=400',
-      poster: 'cosmo_fan',
-      postedAt: now - 12 * MINUTE,
-    },
-    {
-      id: 'seed-2',
-      title: 'Leftover Donuts - Testing Center',
-      foodType: 'Donuts',
-      location: 'Testing Center Lobby',
-      description: 'Two dozen assorted donuts on the table by the doors.',
-      image: 'https://commons.wikimedia.org/wiki/Special:FilePath/Free_Colorful_Donuts_(12097493966).jpg?width=400',
-      poster: 'mia_r',
-      postedAt: now - 35 * MINUTE,
-    },
-    {
-      id: 'seed-3',
-      title: 'Fresh Cookies - Harold B. Lee Library',
-      foodType: 'Cookies',
-      location: 'HBLL 1st Floor Study Area',
-      description: 'Chocolate chip cookies from a study group, help yourself.',
-      image: 'https://commons.wikimedia.org/wiki/Special:FilePath/Chocolate_Chip_Cookies_-_kimberlykv.jpg?width=400',
-      poster: 'tbennett',
-      postedAt: now - 50 * MINUTE,
-    },
-  ];
+const SERVER_ERROR = "Couldn't reach CougarGrub right now. Try again in a moment.";
+
+export class ApiError extends Error {
+  constructor(status, message) {
+    super(message);
+    this.status = status;
+  }
 }
 
-function saveEvents(events) {
-  localStorage.setItem('events', JSON.stringify(events));
+async function request(url, options = {}) {
+  let response;
+  try {
+    response = await fetch(url, {
+      ...options,
+      headers: options.body ? { 'Content-Type': 'application/json' } : undefined,
+    });
+  } catch {
+    throw new ApiError(0, SERVER_ERROR);
+  }
+  const data = await response.json().catch(() => null);
+  if (!response.ok) {
+    throw new ApiError(response.status, data?.msg || SERVER_ERROR);
+  }
+  return data;
 }
 
+// Newest first
 export function getEvents() {
-  const saved = localStorage.getItem('events');
-  if (saved === null) {
-    const seeded = createSeedEvents();
-    saveEvents(seeded);
-    return seeded;
-  }
-  return JSON.parse(saved).sort((a, b) => b.postedAt - a.postedAt);
+  return request('/api/events');
 }
 
-export function addEvent(details, poster) {
-  const event = { ...details, id: crypto.randomUUID(), poster, postedAt: Date.now() };
-  saveEvents([event, ...getEvents()]);
-  return event;
+// The server fills in the poster from whoever is logged in
+export function addEvent(details) {
+  return request('/api/events', { method: 'POST', body: JSON.stringify(details) });
 }
 
-// Only the poster can remove their own event; the backend will enforce this same check later
-export function removeEvent(id, userName) {
-  const events = getEvents();
-  const event = events.find((e) => e.id === id);
-  if (!event || event.poster !== userName) {
-    return false;
-  }
-  saveEvents(events.filter((e) => e.id !== id));
-  return true;
+// Only the poster can remove their own event; the server enforces this
+export function removeEvent(id) {
+  return request(`/api/events/${encodeURIComponent(id)}`, { method: 'DELETE' });
 }
 
-// Anyone except the poster can report the food as gone; enough reports take the listing down
-export function reportGone(id, userName) {
-  const events = getEvents();
-  const event = events.find((e) => e.id === id);
-  const reports = event?.goneReports || [];
-  if (!event || event.poster === userName || reports.includes(userName)) {
-    return null;
-  }
-  const updated = { ...event, goneReports: [...reports, userName] };
-  if (updated.goneReports.length >= GONE_THRESHOLD) {
-    saveEvents(events.filter((e) => e.id !== id));
-    return { event: updated, removed: true };
-  }
-  saveEvents(events.map((e) => (e.id === id ? updated : e)));
-  return { event: updated, removed: false };
+// Resolves with { event, removed }; removed is true once enough people have reported it
+export function reportGone(id) {
+  return request(`/api/events/${encodeURIComponent(id)}/gone`, { method: 'POST' });
 }
