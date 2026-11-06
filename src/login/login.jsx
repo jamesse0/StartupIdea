@@ -2,9 +2,18 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './login.css';
 
-function getUsers() {
-  return JSON.parse(localStorage.getItem('users') || '{}');
+// Sends JSON to the backend and always resolves with the status and parsed body (or {} if there isn't one)
+async function sendJson(url, method, body) {
+  const response = await fetch(url, {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json().catch(() => ({}));
+  return { ok: response.ok, status: response.status, data };
 }
+
+const SERVER_ERROR = "Couldn't reach CougarGrub right now. Try again in a moment.";
 
 export function Login({ userName, onAuthChange }) {
   const navigate = useNavigate();
@@ -12,58 +21,108 @@ export function Login({ userName, onAuthChange }) {
   const [loginPassword, setLoginPassword] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [isCreating, setIsCreating] = React.useState(false);
-  const [verificationCode, setVerificationCode] = React.useState('');
+  const [pendingId, setPendingId] = React.useState('');
+  const [demoCode, setDemoCode] = React.useState('');
   const [codeInput, setCodeInput] = React.useState('');
   const [verifyError, setVerifyError] = React.useState('');
-  const [successMessage, setSuccessMessage] = React.useState('');
   const [usernameError, setUsernameError] = React.useState('');
+  const [emailError, setEmailError] = React.useState('');
   const [loginError, setLoginError] = React.useState('');
+  const [formError, setFormError] = React.useState('');
+  const [busy, setBusy] = React.useState(false);
 
   const isByuEmail = email.trim().toLowerCase().endsWith('@byu.edu');
-  const canSubmit = loginName && loginPassword && (!isCreating || isByuEmail);
+  const canSubmit = loginName && loginPassword && (!isCreating || isByuEmail) && !busy;
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    if (isCreating) {
-      const taken = Object.keys(getUsers()).some((name) => name.toLowerCase() === loginName.trim().toLowerCase());
-      if (taken) {
-        setUsernameError('That username is already taken. Pick another, or log in instead.');
-        return;
-      }
-      setVerificationCode(String(Math.floor(100000 + Math.random() * 900000)));
+  // A 409 from the server says whether the username or the email is the one already taken
+  function showConflict(data) {
+    if (data.field === 'email') {
+      setEmailError(data.msg);
     } else {
-      const users = getUsers();
-      const match = Object.keys(users).find((name) => name.toLowerCase() === loginName.trim().toLowerCase());
-      if (!match || users[match].password !== loginPassword) {
-        setLoginError('Incorrect username or password.');
-        return;
-      }
-      onAuthChange(match);
-      navigate('/home');
+      setUsernameError(data.msg);
     }
   }
 
-  function handleVerify(e) {
-    e.preventDefault();
-    if (codeInput !== verificationCode) {
-      setVerifyError("That code doesn't match. Try again.");
-      return;
-    }
-    // Mock: plain-text passwords in localStorage until the Service deliverable moves this to the server with BCrypt
-    const users = getUsers();
-    users[loginName] = { email: email.trim().toLowerCase(), password: loginPassword };
-    localStorage.setItem('users', JSON.stringify(users));
+  function finishLogin(name) {
+    onAuthChange(name);
+    navigate('/home');
+  }
 
-    setVerificationCode('');
-    setCodeInput('');
-    setIsCreating(false);
-    setSuccessMessage('Account created! Log in below.');
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setFormError('');
+    setBusy(true);
+    try {
+      if (isCreating) {
+        const { ok, status, data } = await sendJson('/api/auth/create', 'POST', {
+          userName: loginName,
+          email,
+          password: loginPassword,
+        });
+        if (ok) {
+          setPendingId(data.pendingId);
+          setDemoCode(data.demoCode);
+        } else if (status === 409) {
+          showConflict(data);
+        } else {
+          setFormError(data.msg || SERVER_ERROR);
+        }
+      } else {
+        const { ok, data } = await sendJson('/api/auth/login', 'PUT', {
+          userName: loginName,
+          password: loginPassword,
+        });
+        if (ok) {
+          finishLogin(data.userName);
+        } else {
+          setLoginError(data.msg || SERVER_ERROR);
+        }
+      }
+    } catch {
+      setFormError(SERVER_ERROR);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function handleVerify(e) {
+    e.preventDefault();
+    setBusy(true);
+    try {
+      const { ok, status, data } = await sendJson('/api/auth/verify', 'POST', { pendingId, code: codeInput });
+      if (ok) {
+        finishLogin(data.userName);
+      } else if (status === 400) {
+        setVerifyError(data.msg);
+      } else {
+        // Expired code, too many tries, or the name/email got taken: send them back to the signup form
+        cancelVerify();
+        if (status === 409) {
+          showConflict(data);
+        } else {
+          setFormError(data.msg || SERVER_ERROR);
+        }
+      }
+    } catch {
+      setVerifyError(SERVER_ERROR);
+    } finally {
+      setBusy(false);
+    }
   }
 
   function cancelVerify() {
-    setVerificationCode('');
+    setPendingId('');
+    setDemoCode('');
     setCodeInput('');
     setVerifyError('');
+  }
+
+  function toggleCreating() {
+    setIsCreating(!isCreating);
+    setUsernameError('');
+    setEmailError('');
+    setLoginError('');
+    setFormError('');
   }
 
   return (
@@ -89,19 +148,19 @@ export function Login({ userName, onAuthChange }) {
               <button type="button" className="btn btn-cougar-outline" onClick={() => onAuthChange('')}>Logout</button>
             </div>
           </>
-        ) : verificationCode ? (
+        ) : pendingId ? (
           <>
             <h2>Verify your email</h2>
             <p>We sent a 6-digit code to <strong>{email.trim()}</strong>.</p>
-            {/* Mock: the Service deliverable will email this code instead of showing it */}
-            <p className="demo-note">Demo mode: email isn't hooked up yet, so your code is <strong>{verificationCode}</strong>.</p>
+            {/* Demo mode: email isn't hooked up, so the server sends the code back for us to show */}
+            <p className="demo-note">Demo mode: email isn't hooked up yet, so your code is <strong>{demoCode}</strong>.</p>
             <form onSubmit={handleVerify}>
               <label htmlFor="verify-code" className="form-label">Verification Code</label>
               <input type="text" id="verify-code" className="form-control code-input" inputMode="numeric" maxLength={6} placeholder="000000" value={codeInput} onChange={(e) => { setCodeInput(e.target.value.replace(/\D/g, '')); setVerifyError(''); }} />
               {verifyError && <p className="field-hint">{verifyError}</p>}
 
               <div className="button-row">
-                <button type="submit" className="btn btn-cougar" disabled={codeInput.length !== 6}>Verify</button>
+                <button type="submit" className="btn btn-cougar" disabled={codeInput.length !== 6 || busy}>Verify</button>
                 <button type="button" className="btn btn-cougar-outline" onClick={cancelVerify}>Back</button>
               </div>
             </form>
@@ -109,7 +168,7 @@ export function Login({ userName, onAuthChange }) {
         ) : (
           <>
             <h2>{isCreating ? 'Create an Account' : 'Login'}</h2>
-            {successMessage && <p className="success-note">{successMessage}</p>}
+            {formError && <p className="field-hint">{formError}</p>}
             <form onSubmit={handleSubmit}>
               <label htmlFor="login-username" className="form-label">Username</label>
               <input type="text" id="login-username" className="form-control" name="username" placeholder="Enter your username" required value={loginName} onChange={(e) => { setLoginName(e.target.value); setUsernameError(''); setLoginError(''); }} />
@@ -118,8 +177,9 @@ export function Login({ userName, onAuthChange }) {
               {isCreating && (
                 <>
                   <label htmlFor="register-email" className="form-label">BYU Email</label>
-                  <input type="email" id="register-email" className="form-control" name="email" placeholder="you@byu.edu" required value={email} onChange={(e) => setEmail(e.target.value)} />
+                  <input type="email" id="register-email" className="form-control" name="email" placeholder="you@byu.edu" required value={email} onChange={(e) => { setEmail(e.target.value); setEmailError(''); }} />
                   {email && !isByuEmail && <p className="field-hint">Must be a @byu.edu email.</p>}
+                  {emailError && <p className="field-hint">{emailError}</p>}
                 </>
               )}
 
@@ -131,7 +191,7 @@ export function Login({ userName, onAuthChange }) {
                 <button type="submit" className="btn btn-cougar" disabled={!canSubmit}>
                   {isCreating ? 'Create Account' : 'Login'}
                 </button>
-                <button type="button" className="btn btn-cougar-outline" onClick={() => { setIsCreating(!isCreating); setSuccessMessage(''); setUsernameError(''); setLoginError(''); }}>
+                <button type="button" className="btn btn-cougar-outline" onClick={toggleCreating}>
                   {isCreating ? 'Back to login' : 'Create an account'}
                 </button>
               </div>

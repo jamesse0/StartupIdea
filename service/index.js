@@ -52,7 +52,7 @@ apiRouter.post('/auth/create', async (req, res) => {
   }
   const conflict = findConflict(userName, email);
   if (conflict) {
-    return res.status(409).send({ msg: conflict });
+    return res.status(409).send(conflict);
   }
 
   clearExpiredSignups();
@@ -93,7 +93,7 @@ apiRouter.post('/auth/verify', (req, res) => {
   pendingSignups.delete(pendingId);
   const conflict = findConflict(pending.userName, pending.email);
   if (conflict) {
-    return res.status(409).send({ msg: conflict });
+    return res.status(409).send(conflict);
   }
 
   const user = createUser(pending.userName, pending.email, pending.passwordHash);
@@ -149,13 +149,13 @@ function findUser(field, value) {
   return users.find((u) => u[field]?.toLowerCase() === value.toLowerCase()) || null;
 }
 
-// Returns an error message if the username or email already belongs to an account
+// Returns which field is taken and why, so the frontend can show the error under the right input
 function findConflict(userName, email) {
   if (findUser('userName', userName)) {
-    return 'That username is already taken. Pick another, or log in instead.';
+    return { field: 'userName', msg: 'That username is already taken. Pick another, or log in instead.' };
   }
   if (findUser('email', email)) {
-    return 'An account with that email already exists.';
+    return { field: 'email', msg: 'An account with that email already exists.' };
   }
   return null;
 }
