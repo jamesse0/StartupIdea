@@ -3,6 +3,7 @@ import cookieParser from 'cookie-parser';
 import bcrypt from 'bcryptjs';
 import { v4 as uuid } from 'uuid';
 import { randomInt } from 'node:crypto';
+import { readFileSync } from 'node:fs';
 
 const app = express();
 
@@ -25,6 +26,14 @@ const DEFAULT_IMAGE = 'https://commons.wikimedia.org/wiki/Special:FilePath/Good_
 
 // Free food listings, newest first. Starts with a few examples so the app isn't empty after a restart
 const events = createSeedEvents();
+
+// The Google Geocoding key lives in mapsConfig.json, which is gitignored and never sent to the browser
+const geocodeKey = loadGeocodeKey();
+// Remembers recent lookups so the same building isn't sent to Google over and over
+const geocodeCache = new Map();
+const GEOCODE_CACHE_LIMIT = 500;
+// Short names like "JSB" are looked up on BYU's campus
+const CAMPUS_SUFFIX = 'Brigham Young University, Provo, UT';
 
 // Parse JSON request bodies; the limit is raised because event photos arrive as base64 data URLs
 app.use(express.json({ limit: '2mb' }));
@@ -213,6 +222,58 @@ apiRouter.post('/events/:id/gone', verifyAuth, (req, res) => {
   res.send({ event, removed });
 });
 
+// Restricted: turns a typed location into Google's matched address and coordinates.
+// The browser only talks to this endpoint, so the Google key never leaves the server
+apiRouter.get('/geocode', verifyAuth, async (req, res) => {
+  const address = String(req.query.address ?? '').trim();
+  if (!address || address.length > 200) {
+    return res.status(400).send({ msg: 'Enter a location to look up.' });
+  }
+  if (!geocodeKey) {
+    return res.status(503).send({ msg: "Location lookup isn't set up on the server." });
+  }
+
+  const cacheKey = address.toLowerCase();
+  if (geocodeCache.has(cacheKey)) {
+    return res.send(geocodeCache.get(cacheKey));
+  }
+
+  try {
+    const url = new URL('https://maps.googleapis.com/maps/api/geocode/json');
+    url.searchParams.set('address', `${address}, ${CAMPUS_SUFFIX}`);
+    url.searchParams.set('region', 'us');
+    url.searchParams.set('key', geocodeKey);
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (data.status === 'ZERO_RESULTS') {
+      return res.status(404).send({ msg: "Couldn't find that spot. Try a building name or address." });
+    }
+    if (data.status !== 'OK') {
+      // Log Google's reason (bad key, IP not allowed, quota hit) for us, but keep it out of the response
+      console.error('Geocoding failed:', data.status, data.error_message);
+      return res.status(502).send({ msg: 'Location lookup is unavailable right now.' });
+    }
+
+    // exact is false when Google couldn't place it and fell back to somewhere general, like the middle of campus
+    const match = data.results[0];
+    const result = {
+      address: match.formatted_address,
+      lat: match.geometry.location.lat,
+      lng: match.geometry.location.lng,
+      exact: !match.partial_match,
+    };
+    if (geocodeCache.size >= GEOCODE_CACHE_LIMIT) {
+      geocodeCache.delete(geocodeCache.keys().next().value);
+    }
+    geocodeCache.set(cacheKey, result);
+    res.send(result);
+  } catch (err) {
+    console.error('Geocoding failed:', err.message);
+    res.status(502).send({ msg: 'Location lookup is unavailable right now.' });
+  }
+});
+
 // Any other path goes to the React app so React Router can handle routes like /listings
 app.use((_req, res) => {
   res.sendFile('index.html', { root: 'public' });
@@ -296,6 +357,17 @@ function createSeedEvents() {
       goneReports: [],
     },
   ];
+}
+
+// Missing config just turns location lookup off instead of crashing the server
+function loadGeocodeKey() {
+  try {
+    const config = JSON.parse(readFileSync(new URL('./mapsConfig.json', import.meta.url), 'utf8'));
+    return config.geocodeKey || null;
+  } catch {
+    console.warn('mapsConfig.json not found or unreadable; location lookup is disabled.');
+    return null;
+  }
 }
 
 function clearExpiredSignups() {
