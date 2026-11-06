@@ -177,6 +177,8 @@ apiRouter.post('/events', verifyAuth, (req, res) => {
     location,
     description: body.description?.trim() || '',
     image: isImage(body.image) ? body.image : DEFAULT_IMAGE,
+    // Coordinates from the post page's location lookup; null if the poster skipped it
+    coords: toCoords(body.coords),
     poster: req.user.userName,
     postedAt: Date.now(),
     goneReports: [],
@@ -320,6 +322,16 @@ function isImage(value) {
   return typeof value === 'string' && (value.startsWith('data:image/') || value.startsWith('https://'));
 }
 
+// Only keep real latitude/longitude numbers so a bad value can't break the maps
+function toCoords(value) {
+  const lat = Number(value?.lat);
+  const lng = Number(value?.lng);
+  if (!Number.isFinite(lat) || !Number.isFinite(lng) || Math.abs(lat) > 90 || Math.abs(lng) > 180) {
+    return null;
+  }
+  return { lat, lng };
+}
+
 function createSeedEvents() {
   const now = Date.now();
   return [
@@ -330,6 +342,7 @@ function createSeedEvents() {
       location: 'Wilkinson Student Center, Room 2260',
       description: 'Leftovers from a club meeting, about 6 boxes.',
       image: 'https://commons.wikimedia.org/wiki/Special:FilePath/Pizza_pie.jpg?width=400',
+      coords: { lat: 40.2485515, lng: -111.6472221 },
       poster: 'cosmo_fan',
       postedAt: now - 12 * MINUTE,
       goneReports: [],
@@ -341,6 +354,7 @@ function createSeedEvents() {
       location: 'Testing Center Lobby',
       description: 'Two dozen assorted donuts on the table by the doors.',
       image: 'https://commons.wikimedia.org/wiki/Special:FilePath/Free_Colorful_Donuts_(12097493966).jpg?width=400',
+      coords: { lat: 40.2454491, lng: -111.6524844 },
       poster: 'mia_r',
       postedAt: now - 35 * MINUTE,
       goneReports: [],
@@ -352,6 +366,7 @@ function createSeedEvents() {
       location: 'HBLL 1st Floor Study Area',
       description: 'Chocolate chip cookies from a study group, help yourself.',
       image: 'https://commons.wikimedia.org/wiki/Special:FilePath/Chocolate_Chip_Cookies_-_kimberlykv.jpg?width=400',
+      coords: { lat: 40.2487572, lng: -111.6492175 },
       poster: 'tbennett',
       postedAt: now - 50 * MINUTE,
       goneReports: [],

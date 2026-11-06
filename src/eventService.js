@@ -56,6 +56,11 @@ export function removeEvent(id) {
   return request(`/api/events/${encodeURIComponent(id)}`, { method: 'DELETE' });
 }
 
+// Asks our server (which asks Google) where a typed location is. Resolves with { address, lat, lng, exact }
+export function lookupLocation(address) {
+  return request(`/api/geocode?address=${encodeURIComponent(address)}`);
+}
+
 // Resolves with { event, removed }; removed is true once enough people have reported it
 export function reportGone(id) {
   return request(`/api/events/${encodeURIComponent(id)}/gone`, { method: 'POST' });
