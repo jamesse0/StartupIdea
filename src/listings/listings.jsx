@@ -105,7 +105,7 @@ export function Listings({ userName }) {
         <h2>Live Activity</h2>
         {/* WebSocket data placeholder: updates in real time whenever another user creates or ends a food event */}
         {feed.length === 0 ? (
-          <p className="feed-waiting">Waiting for activity…</p>
+          <p className="feed-waiting">Nothing yet. When you post, take down, or report food, it'll show up here.</p>
         ) : (
           <ul id="live-activity-feed">
             {feed.map((message) => <li key={message.id}>{message.text}</li>)}
