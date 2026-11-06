@@ -19,8 +19,14 @@ const pendingSignups = new Map();
 const CODE_LIFETIME = 10 * 60 * 1000;
 const MAX_CODE_ATTEMPTS = 5;
 
-// Parse JSON request bodies
-app.use(express.json());
+const MINUTE = 60 * 1000;
+const DEFAULT_IMAGE = 'https://commons.wikimedia.org/wiki/Special:FilePath/Good_Food_Display_-_NCI_Visuals_Online.jpg?width=400';
+
+// Free food listings, newest first. Starts with a few examples so the app isn't empty after a restart
+const events = createSeedEvents();
+
+// Parse JSON request bodies; the limit is raised because event photos arrive as base64 data URLs
+app.use(express.json({ limit: '2mb' }));
 
 // Read the auth token cookie on incoming requests
 app.use(cookieParser());
@@ -138,9 +144,52 @@ apiRouter.get('/user/me', verifyAuth, (req, res) => {
   res.send({ userName: req.user.userName });
 });
 
+// Restricted: every current listing, newest first
+apiRouter.get('/events', verifyAuth, (_req, res) => {
+  res.send(events);
+});
+
+// Restricted: post a new listing. The poster is always the logged-in user, never something the client sends
+apiRouter.post('/events', verifyAuth, (req, res) => {
+  const body = req.body ?? {};
+  const title = body.title?.trim();
+  const foodType = body.foodType?.trim();
+  const location = body.location?.trim();
+
+  if (!title || !foodType || !location) {
+    return res.status(400).send({ msg: 'Title, food type, and location are required.' });
+  }
+
+  const event = {
+    id: uuid(),
+    title,
+    foodType,
+    location,
+    description: body.description?.trim() || '',
+    image: isImage(body.image) ? body.image : DEFAULT_IMAGE,
+    poster: req.user.userName,
+    postedAt: Date.now(),
+    goneReports: [],
+  };
+  events.unshift(event);
+  res.status(201).send(event);
+});
+
 // Any other path goes to the React app so React Router can handle routes like /listings
 app.use((_req, res) => {
   res.sendFile('index.html', { root: 'public' });
+});
+
+// Turn errors (like a photo that's too big) into a short JSON message instead of an HTML stack trace
+app.use((err, _req, res, _next) => {
+  const status = err.status || 500;
+  let msg = 'Something went wrong on the server.';
+  if (status === 413) {
+    msg = 'That photo is too large. Try a smaller one.';
+  } else if (status < 500) {
+    msg = "That request couldn't be read.";
+  }
+  res.status(status).send({ msg });
 });
 
 // Usernames and emails are matched case-insensitively so "Cosmo" and "cosmo" can't both register
@@ -165,6 +214,50 @@ function createUser(userName, email, passwordHash) {
   const user = { userName, email, password: passwordHash, token: uuid() };
   users.push(user);
   return user;
+}
+
+// Accept uploaded photos (data URLs) and web images; anything else falls back to the default photo
+function isImage(value) {
+  return typeof value === 'string' && (value.startsWith('data:image/') || value.startsWith('https://'));
+}
+
+function createSeedEvents() {
+  const now = Date.now();
+  return [
+    {
+      id: 'seed-1',
+      title: 'Free Pizza - Wilkinson Center',
+      foodType: 'Pizza',
+      location: 'Wilkinson Student Center, Room 2260',
+      description: 'Leftovers from a club meeting, about 6 boxes.',
+      image: 'https://commons.wikimedia.org/wiki/Special:FilePath/Pizza_pie.jpg?width=400',
+      poster: 'cosmo_fan',
+      postedAt: now - 12 * MINUTE,
+      goneReports: [],
+    },
+    {
+      id: 'seed-2',
+      title: 'Leftover Donuts - Testing Center',
+      foodType: 'Donuts',
+      location: 'Testing Center Lobby',
+      description: 'Two dozen assorted donuts on the table by the doors.',
+      image: 'https://commons.wikimedia.org/wiki/Special:FilePath/Free_Colorful_Donuts_(12097493966).jpg?width=400',
+      poster: 'mia_r',
+      postedAt: now - 35 * MINUTE,
+      goneReports: [],
+    },
+    {
+      id: 'seed-3',
+      title: 'Fresh Cookies - Harold B. Lee Library',
+      foodType: 'Cookies',
+      location: 'HBLL 1st Floor Study Area',
+      description: 'Chocolate chip cookies from a study group, help yourself.',
+      image: 'https://commons.wikimedia.org/wiki/Special:FilePath/Chocolate_Chip_Cookies_-_kimberlykv.jpg?width=400',
+      poster: 'tbennett',
+      postedAt: now - 50 * MINUTE,
+      goneReports: [],
+    },
+  ];
 }
 
 function clearExpiredSignups() {
