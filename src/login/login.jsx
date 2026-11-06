@@ -15,7 +15,7 @@ async function sendJson(url, method, body) {
 
 const SERVER_ERROR = "Couldn't reach CougarGrub right now. Try again in a moment.";
 
-export function Login({ userName, onAuthChange }) {
+export function Login({ userName, onAuthChange, onLogout }) {
   const navigate = useNavigate();
   const [loginName, setLoginName] = React.useState('');
   const [loginPassword, setLoginPassword] = React.useState('');
@@ -145,7 +145,7 @@ export function Login({ userName, onAuthChange }) {
             <p>Logged in as <span id="current-username">{userName}</span>.</p>
             <div className="button-row">
               <button type="button" className="btn btn-cougar" onClick={() => navigate('/home')}>Go to Home</button>
-              <button type="button" className="btn btn-cougar-outline" onClick={() => onAuthChange('')}>Logout</button>
+              <button type="button" className="btn btn-cougar-outline" onClick={onLogout}>Logout</button>
             </div>
           </>
         ) : pendingId ? (

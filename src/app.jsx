@@ -8,6 +8,7 @@ import { Listings } from './listings/listings';
 import { PostEvent } from './postEvent/postEvent';
 
 export default function App() {
+  // The cached name lets the page render right away; the server check below has the final say
   const [userName, setUserName] = React.useState(localStorage.getItem('userName') || '');
 
   function handleAuthChange(newUserName) {
@@ -17,6 +18,30 @@ export default function App() {
       localStorage.removeItem('userName');
     }
     setUserName(newUserName);
+  }
+
+  // On load, ask the server who's logged in so a stale cached name (expired token, server restart) gets cleared
+  React.useEffect(() => {
+    fetch('/api/user/me')
+      .then(async (response) => {
+        if (response.ok) {
+          const { userName: serverName } = await response.json();
+          handleAuthChange(serverName);
+        } else if (response.status === 401) {
+          handleAuthChange('');
+        }
+      })
+      // If the server can't be reached, keep the cached name rather than logging the user out
+      .catch(() => {});
+  }, []);
+
+  async function handleLogout() {
+    try {
+      await fetch('/api/auth/logout', { method: 'DELETE' });
+    } catch {
+      // Still clear the local login even if the server can't be reached
+    }
+    handleAuthChange('');
   }
 
   return (
@@ -61,7 +86,7 @@ export default function App() {
         </nav>
 
         <Routes>
-          <Route path="/" element={<Login userName={userName} onAuthChange={handleAuthChange} />} />
+          <Route path="/" element={<Login userName={userName} onAuthChange={handleAuthChange} onLogout={handleLogout} />} />
           <Route path="/home" element={userName ? <Home userName={userName} /> : <Navigate to="/" replace />} />
           <Route path="/listings" element={userName ? <Listings userName={userName} /> : <Navigate to="/" replace />} />
           <Route path="/post" element={userName ? <PostEvent userName={userName} /> : <Navigate to="/" replace />} />

@@ -84,15 +84,6 @@
     border-radius: 0.5rem;
 }
 
-.login-page .success-note {
-    background-color: #E6F4EA;
-    color: #1E6B34;
-    font-size: 0.9rem;
-    font-weight: 500;
-    padding: 0.6rem 0.8rem;
-    border-radius: 0.5rem;
-}
-
 .login-page .code-input {
     font-size: 1.5rem;
     text-align: center;
