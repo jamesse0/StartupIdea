@@ -63,31 +63,6 @@
     object-fit: cover;
 }
 
-/* Meal idea slide from TheMealDB: dark fade at the bottom keeps the caption readable on any photo */
-.home-page #tip-carousel .meal-caption {
-    left: 0;
-    right: 0;
-    bottom: 0;
-    padding: 2.5rem 3rem 2rem;
-    background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
-}
-
-.home-page .meal-caption p {
-    margin: 0;
-    font-size: 0.9rem;
-}
-
-.home-page .meal-caption a {
-    color: var(--yellow);
-    font-weight: 600;
-    font-size: 1.1rem;
-    text-decoration: none;
-}
-
-.home-page .meal-caption a:hover {
-    text-decoration: underline;
-}
-
 .home-page .tip-slide {
     display: flex;
     align-items: center;

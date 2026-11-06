@@ -2,8 +2,8 @@
 
 This file represents what I have learned about web programming.
 
-- [My startup](https://startup.cs260.click)
-- [My simon](https://simon.cs260.click)
+- [My startup](https://startup.cougargrub.click)
+- [My simon](https://simon.cougargrub.click)
 
 ## Helpful links
 
@@ -42,3 +42,16 @@ Stuff I picked up making it reactive
 - Hiding a button isn't security. The real check has to happen in the service (and later the server)
 - localStorage only holds ~5MB, so photos get shrunk before saving
 - Keeping all storage in `eventService.js` means the DB deliverable only touches one file
+
+## Service
+
+Stuff I learned adding the backend
+- There are two apps in the repo now, frontend in the main folder and backend in service. Backend packages have to be installed inside service or the deploy breaks (502)
+- The vite proxy lets the frontend just fetch /api/whatever and it works locally and on the real site
+- Got rid of the fake students and mock data from React part 2 since the listings come from the server now
+- Don't trust what the browser sends. The server decides who posted and who's allowed to delete or report
+- bcrypt hashes passwords so they're never stored in plain text
+- The login token goes in a cookie JavaScript can't read, which is safer than localStorage
+- Anything in the browser is public, including API keys. The geocoding key stays on the server in a gitignored config file. The maps embed key is fine in the frontend since it's free and only works on my site
+- Lock down API keys: limit the APIs, where they work from, add a daily cap, and set a budget alert
+- Everything resets when the server restarts since it's all in memory. That's what the database is for next

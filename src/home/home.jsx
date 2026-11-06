@@ -21,29 +21,9 @@ export function Home({ userName }) {
   const [recent, setRecent] = React.useState(null);
   const [loadError, setLoadError] = React.useState('');
 
-  const [meal, setMeal] = React.useState(null);
-
+  // Pick one of our own food tips at random each visit
   React.useEffect(() => {
     setTip(FOOD_TIPS[Math.floor(Math.random() * FOOD_TIPS.length)]);
-  }, []);
-
-  // 3rd party API: TheMealDB suggests a random meal (free, no key, allows browser requests).
-  // If it can't be reached, the meal slide just doesn't show.
-  React.useEffect(() => {
-    fetch('https://www.themealdb.com/api/json/v1/1/random.php')
-      .then((response) => response.json())
-      .then((data) => {
-        const found = data.meals?.[0];
-        if (found) {
-          setMeal({
-            name: found.strMeal,
-            category: found.strCategory,
-            image: `${found.strMealThumb}/medium`,
-            link: `https://www.themealdb.com/meal/${found.idMeal}`,
-          });
-        }
-      })
-      .catch(() => {});
   }, []);
 
   React.useEffect(() => {
@@ -62,7 +42,7 @@ export function Home({ userName }) {
 
       <section id="tip" className="card-panel">
         <h2>Food Tip of the Day</h2>
-        <Carousel id="tip-carousel" indicatorLabels={meal ? ['Food tip', 'Meal idea', 'Campus photo'] : ['Food tip', 'Campus photo']}>
+        <Carousel id="tip-carousel" indicatorLabels={['Food tip', 'Campus photo']}>
           <Carousel.Item>
             <div className="tip-slide">
               <blockquote id="daily-tip">
@@ -70,17 +50,6 @@ export function Home({ userName }) {
               </blockquote>
             </div>
           </Carousel.Item>
-          {meal && (
-            <Carousel.Item>
-              <img src={meal.image} alt={meal.name} />
-              <Carousel.Caption className="meal-caption">
-                <p>No free food nearby? Today's meal idea:</p>
-                <a href={meal.link} target="_blank" rel="noreferrer">
-                  {meal.name}{meal.category ? ` (${meal.category})` : ''}
-                </a>
-              </Carousel.Caption>
-            </Carousel.Item>
-          )}
           <Carousel.Item>
             <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Brigham_Young_University_Campus_-_BYU_-_Provo_-_Utah_in_Autumn.jpg?width=800" alt="BYU campus in Provo, Utah" />
           </Carousel.Item>
