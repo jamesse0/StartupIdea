@@ -78,6 +78,21 @@ apiRouter.delete('/auth/logout', (req, res) => {
   res.status(204).end();
 });
 
+// Middleware for restricted endpoints: only continue if the request has a valid auth token
+function verifyAuth(req, res, next) {
+  const user = findUser('token', req.cookies[authCookieName]);
+  if (!user) {
+    return res.status(401).send({ msg: 'Please log in first.' });
+  }
+  req.user = user;
+  next();
+}
+
+// Restricted: tells the frontend who is logged in, or 401 if nobody is
+apiRouter.get('/user/me', verifyAuth, (req, res) => {
+  res.send({ userName: req.user.userName });
+});
+
 // Any other path goes to the React app so React Router can handle routes like /listings
 app.use((_req, res) => {
   res.sendFile('index.html', { root: 'public' });
