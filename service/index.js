@@ -1,4 +1,5 @@
 import express from 'express';
+import cookieParser from 'cookie-parser';
 import bcrypt from 'bcryptjs';
 import { v4 as uuid } from 'uuid';
 
@@ -14,6 +15,9 @@ const users = [];
 
 // Parse JSON request bodies
 app.use(express.json());
+
+// Read the auth token cookie on incoming requests
+app.use(cookieParser());
 
 // Serve the built React frontend once it's deployed into the public directory
 app.use(express.static('public'));
@@ -52,6 +56,28 @@ apiRouter.post('/auth/create', async (req, res) => {
   res.send({ userName: user.userName });
 });
 
+// Log in with a username and password; a fresh token replaces any old one
+apiRouter.put('/auth/login', async (req, res) => {
+  const { userName, password } = req.body ?? {};
+  const user = findUser('userName', userName?.trim());
+  if (user && password && (await bcrypt.compare(password, user.password))) {
+    user.token = uuid();
+    setAuthCookie(res, user.token);
+    return res.send({ userName: user.userName });
+  }
+  res.status(401).send({ msg: 'Incorrect username or password.' });
+});
+
+// Log out by forgetting the token on the server and clearing the cookie
+apiRouter.delete('/auth/logout', (req, res) => {
+  const user = findUser('token', req.cookies[authCookieName]);
+  if (user) {
+    delete user.token;
+  }
+  res.clearCookie(authCookieName);
+  res.status(204).end();
+});
+
 // Any other path goes to the React app so React Router can handle routes like /listings
 app.use((_req, res) => {
   res.sendFile('index.html', { root: 'public' });
@@ -60,7 +86,7 @@ app.use((_req, res) => {
 // Usernames and emails are matched case-insensitively so "Cosmo" and "cosmo" can't both register
 function findUser(field, value) {
   if (!value) return null;
-  return users.find((u) => u[field].toLowerCase() === value.toLowerCase()) || null;
+  return users.find((u) => u[field]?.toLowerCase() === value.toLowerCase()) || null;
 }
 
 async function createUser(userName, email, password) {
