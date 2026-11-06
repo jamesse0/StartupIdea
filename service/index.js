@@ -20,6 +20,7 @@ const CODE_LIFETIME = 10 * 60 * 1000;
 const MAX_CODE_ATTEMPTS = 5;
 
 const MINUTE = 60 * 1000;
+const GONE_THRESHOLD = 3;
 const DEFAULT_IMAGE = 'https://commons.wikimedia.org/wiki/Special:FilePath/Good_Food_Display_-_NCI_Visuals_Online.jpg?width=400';
 
 // Free food listings, newest first. Starts with a few examples so the app isn't empty after a restart
@@ -173,6 +174,43 @@ apiRouter.post('/events', verifyAuth, (req, res) => {
   };
   events.unshift(event);
   res.status(201).send(event);
+});
+
+// Restricted: only the person who posted a listing can take it down
+apiRouter.delete('/events/:id', verifyAuth, (req, res) => {
+  const index = events.findIndex((e) => e.id === req.params.id);
+  if (index === -1) {
+    return res.status(404).send({ msg: 'That listing is already gone.' });
+  }
+  if (events[index].poster !== req.user.userName) {
+    return res.status(403).send({ msg: 'You can only take down your own posts.' });
+  }
+  events.splice(index, 1);
+  res.status(204).end();
+});
+
+// Restricted: anyone except the poster can report the food as gone, once each.
+// Enough reports take the listing down
+apiRouter.post('/events/:id/gone', verifyAuth, (req, res) => {
+  const index = events.findIndex((e) => e.id === req.params.id);
+  if (index === -1) {
+    return res.status(404).send({ msg: 'That listing is already gone.' });
+  }
+  const event = events[index];
+  const userName = req.user.userName;
+  if (event.poster === userName) {
+    return res.status(403).send({ msg: "You can't report your own post. Take it down instead." });
+  }
+  if (event.goneReports.includes(userName)) {
+    return res.status(409).send({ msg: "You've already reported this one." });
+  }
+
+  event.goneReports.push(userName);
+  const removed = event.goneReports.length >= GONE_THRESHOLD;
+  if (removed) {
+    events.splice(index, 1);
+  }
+  res.send({ event, removed });
 });
 
 // Any other path goes to the React app so React Router can handle routes like /listings
