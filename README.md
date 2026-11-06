@@ -114,14 +114,14 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] I completed the prerequisites for this deliverable (Simon deployed, GitHub link, Git commits)
-- [ ] **Node.js/Express HTTP service** - I did not complete this part of the deliverable.
-- [ ] **Static middleware for frontend** - I did not complete this part of the deliverable.
-- [ ] **Calls to third party endpoints** - I did not complete this part of the deliverable.
-- [ ] **Backend service endpoints** - I did not complete this part of the deliverable.
-- [ ] **Frontend calls service endpoints** - I did not complete this part of the deliverable.
-- [ ] **Supports registration, login, logout, and restricted endpoint** - I did not complete this part of the deliverable.
-- [ ] **Uses BCrypt to hash passwords** - I did not complete this part of the deliverable.
+- [x] I completed the prerequisites for this deliverable (Simon deployed, GitHub link, Git commits)
+- [x] **Node.js/Express HTTP service** - The backend lives in `service/` with its own `package.json`. `service/index.js` is an Express app on port 4000, and `vite.config.js` proxies `/api` calls to it during development.
+- [x] **Static middleware for frontend** - `express.static('public')` serves the built React app, and any unknown path falls back to `index.html` so React Router routes like `/listings` still load. `deployService.sh` builds the frontend into `public/` on the server.
+- [x] **Calls to third party endpoints** - The home page calls TheMealDB with `fetch` for a random "meal idea" carousel slide. Google Maps is also used: the post page looks up a typed location through the Google Geocoding API (called from my backend so that key stays secret) and shows a Google Maps Embed preview, and every listing card shows an embedded Google map pinned at its location.
+- [x] **Backend service endpoints** - `GET/POST /api/events`, `DELETE /api/events/:id` (poster only), `POST /api/events/:id/gone` (3 reports take a listing down), and `GET /api/geocode`. The server sets the poster from the login cookie and checks every rule, and listings are stored in memory until the DB deliverable.
+- [x] **Frontend calls service endpoints** - `src/eventService.js` uses `fetch` for loading, posting, deleting, reporting, and location lookups, and the login page calls the auth endpoints. Users and events are no longer stored in localStorage, only the cached username.
+- [x] **Supports registration, login, logout, and restricted endpoint** - `POST /api/auth/create` and `POST /api/auth/verify` handle signup with a @byu.edu email and a 6-digit code (shown in demo mode), `PUT /api/auth/login` and `DELETE /api/auth/logout` handle sessions with an httpOnly auth cookie, and `GET /api/user/me` plus all the event endpoints require a valid token (401 otherwise). An expired session sends you back to login.
+- [x] **Uses BCrypt to hash passwords** - Passwords are hashed with `bcryptjs` when signup starts and checked with `bcrypt.compare` at login. Plain-text passwords are never stored.
 
 ## 🚀 DB deliverable
 

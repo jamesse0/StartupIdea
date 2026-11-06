@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { getEvents, removeEvent, reportGone, GONE_THRESHOLD } from '../eventService';
 import { EventNotifier } from '../eventNotifier';
+import { MapEmbed, hasMapEmbed } from '../mapEmbed';
 import './listings.css';
 
 function timeAgo(timestamp, now) {
@@ -123,10 +124,14 @@ export function Listings({ userName }) {
                   {event.goneReports?.includes(userName) ? 'Reported ✓' : "Food's gone"}
                 </button>
               )}
-              {/* 3rd party API placeholder: Google Maps will render an interactive map here using the event's location */}
-              <div className="map-placeholder">
-                <p>[Google Maps embed placeholder - {event.location}]</p>
-              </div>
+              {/* Google Maps embed pinned at the coordinates the server looked up when this was posted */}
+              {event.coords && hasMapEmbed ? (
+                <MapEmbed className="listing-map" coords={event.coords} label={event.location} />
+              ) : (
+                <div className="map-placeholder">
+                  <p>No map for this one. Look for {event.location}.</p>
+                </div>
+              )}
             </article>
           ))}
         </section>
